@@ -13,10 +13,8 @@ const io = new Server(server, {
 });
 const usersRouter = require("./AuthServer/authRoutes/users");
 const { connect } = require("./AuthServer/config/DB");
+const { initSocket } = require("./SocketServer/SocketLogic/roomLogic");
 
-io.on("connection", (socket) => {
-  console.log("user logged");
-});
 const socketPort = process.env.SOCKET_PORT || 3030;
 const userAuthPort = process.env.USER_API_PORT || 3000;
 
@@ -25,6 +23,7 @@ authApp.use(express.urlencoded({ extended: false }));
 authApp.use(
   cors({
     origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
   })
 );
 authApp.use("/users", usersRouter);
@@ -36,3 +35,5 @@ authApp.listen(userAuthPort, () => {
   connect();
   console.log("Authentication app listening on port:3000");
 });
+
+initSocket(io);

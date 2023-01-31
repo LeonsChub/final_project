@@ -8,7 +8,7 @@ export const TokenContext = React.createContext();
 //   closeOnBeforeunload: false,
 // });
 
-const socket = undefined;
+const socket = io.connect("http://localhost:3030");
 
 function AppContext({ children }) {
   const [token, setToken] = useState("EMPTY");

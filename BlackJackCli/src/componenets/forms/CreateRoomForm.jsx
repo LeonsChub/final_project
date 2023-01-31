@@ -1,10 +1,27 @@
-import React, { useState } from "react";
-
+import React, { useState, useContext } from "react";
+import { SocketContext, TokenContext } from "../../AppContext";
 function CreateRoomForm() {
   const [name, setName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const socket = useContext(SocketContext);
+  const [token] = useContext(TokenContext);
   return (
-    <form className="text-light">
+    <form
+      className="text-light"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!name) {
+          setNameError("Please Provide a room name");
+        } else {
+          socket.emit("create room", {
+            auth: token,
+            name: name,
+          });
+        }
+      }}
+      noValidate
+    >
       <div className="form-outline mb-2">
         <label className="form-label" htmlFor="form2Example1">
           Room name
@@ -17,6 +34,8 @@ function CreateRoomForm() {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
+
+      <p>{nameError ? nameError : ""} &nbsp;</p>
 
       <div className="row mb-2">
         <div className="col d-flex justify-content-center">
@@ -37,7 +56,7 @@ function CreateRoomForm() {
       </div>
 
       <div className="d-flex justify-content-center">
-        <button type="button" className="btn btn-primary btn-block mx-auto">
+        <button type="submit" className="btn btn-primary btn-block mx-auto">
           Create Room
         </button>
       </div>
