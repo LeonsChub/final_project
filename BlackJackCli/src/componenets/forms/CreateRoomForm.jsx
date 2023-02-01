@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SocketContext, TokenContext } from "../../AppContext";
 function CreateRoomForm() {
   const [name, setName] = useState("");
@@ -6,6 +6,20 @@ function CreateRoomForm() {
   const [nameError, setNameError] = useState("");
   const socket = useContext(SocketContext);
   const [token] = useContext(TokenContext);
+  useEffect(() => {
+    socket.on("create failed", (data) => {
+      setNameError(data.msg);
+    });
+
+    socket.on("create successful", (data) => {
+      socket.emit("join room", { roomId: data.roomData.roomId, auth: token });
+    });
+
+    return () => {
+      socket.off("create failed");
+      socket.off("create successful");
+    };
+  }, []);
   return (
     <form
       className="text-light"
@@ -35,7 +49,7 @@ function CreateRoomForm() {
         />
       </div>
 
-      <p>{nameError ? nameError : ""} &nbsp;</p>
+      <p className="text-danger mx-2 ">{nameError ? nameError : ""} &nbsp;</p>
 
       <div className="row mb-2">
         <div className="col d-flex justify-content-center">

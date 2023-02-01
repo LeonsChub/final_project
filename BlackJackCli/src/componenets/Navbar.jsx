@@ -12,7 +12,9 @@ function MyNavbar() {
   return (
     <Navbar bg="dark" variant="dark" className="d-flex align-items-center">
       <Container>
-        <Navbar.Brand href="#home">PokerLy</Navbar.Brand>
+        <Link to="/">
+          <Navbar.Brand href="#home">PokerLy</Navbar.Brand>
+        </Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {token === "EMPTY" ? renderLoginButtons() : renderWelcome(token)}

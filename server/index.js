@@ -37,3 +37,4 @@ authApp.listen(userAuthPort, () => {
 });
 
 initSocket(io);
+io.emit("update rooms", { rooms: [] });
