@@ -70,6 +70,12 @@ const isNameTaken = (name) => {
   );
 };
 
+const deleteRoom = (roomId) => {
+  const indexToRm = rooms.findIndex((room) => room.roomId == roomId);
+  if (indexToRm !== -1) {
+    rooms.splice(indexToRm, 1);
+  }
+};
 module.exports = {
   createRoom,
   addRoom,
@@ -78,4 +84,5 @@ module.exports = {
   addUserToRoom,
   getRoomById,
   rmUserFromRoom,
+  deleteRoom,
 };

@@ -7,6 +7,7 @@ const {
   addUserToRoom,
   getRoomById,
   rmUserFromRoom,
+  deleteRoom,
 } = require("../roomManager/rooms");
 
 const jwt = require("jsonwebtoken");
@@ -44,19 +45,26 @@ function initSocket(io) {
     socket.on("join room", (data) => {
       if (data) {
         const decoded = authToken(data.auth);
-        if (decoded && data.roomId) {
-          const playerData = { id: decoded.user_id, name: decoded.username };
-          // console.log("data from join room", socket.id, playerData);
-          socket.join(data.roomId);
-          addUserToRoom(data.roomId, playerData);
+        if (decoded && data.roomId && getRoomById(data.roomId)) {
+          if (getRoomById(data.roomId).players.length < 4) {
+            const playerData = { id: decoded.user_id, name: decoded.username };
+            socket.join(data.roomId);
+            addUserToRoom(data.roomId, playerData);
 
-          socket.to(data.roomId).emit("user joined", getRoomById(data.roomId));
-          io.emit("update rooms", { rooms: getAllRooms() });
+            socket
+              .to(data.roomId)
+              .emit("user joined", getRoomById(data.roomId));
+            io.emit("update rooms", { rooms: getAllRooms() });
 
-          io.to(socket.id).emit("join success", {
-            msg: "success joining room...",
-            roomData: getRoomById(data.roomId),
-          });
+            io.to(socket.id).emit("join success", {
+              msg: "success joining room...",
+              roomData: getRoomById(data.roomId),
+            });
+          } else {
+            io.to(socket.id).emit("join failed", {
+              msg: "Too many players Cant Join",
+            });
+          }
         }
       } else {
         console.log("NO DATA PROVIDED");
@@ -77,6 +85,27 @@ function initSocket(io) {
           io.to(socket.id).emit("leave success", {
             msg: "leaving room...",
           });
+        }
+      } else {
+        console.log("NO DATA PROVIDED");
+      }
+    });
+
+    socket.on("disband room", (data) => {
+      if (data) {
+        const decoded = authToken(data.auth);
+        if (decoded && data.roomId) {
+          // socket.leave(data.roomId);
+          deleteRoom(data.roomId);
+          socket.to(data.roomId).emit("kick user");
+          // rmUserFromRoom(data.roomId, decoded.user_id);
+
+          // socket.to(data.roomId).emit("user left", getRoomById(data.roomId));
+          // io.emit("update rooms", { rooms: getAllRooms() });
+
+          // io.to(socket.id).emit("leave success", {
+          //   msg: "leaving room...",
+          // });
         }
       } else {
         console.log("NO DATA PROVIDED");

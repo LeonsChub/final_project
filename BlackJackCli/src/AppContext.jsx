@@ -5,11 +5,11 @@ export const SocketContext = React.createContext();
 export const TokenContext = React.createContext();
 export const RoomContext = React.createContext();
 
-// const socket = io.connect("http://localhost:3030", {
-//   closeOnBeforeunload: false,
-// });
+const socket = io.connect("http://localhost:3030", {
+  closeOnBeforeunload: false,
+});
 
-const socket = io.connect("http://localhost:3030");
+// const socket = io.connect("http://localhost:3030");
 
 function AppContext({ children }) {
   const [token, setToken] = useState("EMPTY");

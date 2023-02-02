@@ -4,11 +4,12 @@ import Button from "react-bootstrap/Button";
 import Navbar from "./componenets/Navbar";
 import LoginPage from "./componenets/pages/LoginPage";
 import UserPage from "./componenets/pages/UserPage";
-import { RoomContext, SocketContext } from "./AppContext";
+import { RoomContext, SocketContext, TokenContext } from "./AppContext";
 import MyRoom from "./componenets/pages/MyRoom";
 function App() {
   const socket = useContext(SocketContext);
   const [roomData, setRoomData] = useContext(RoomContext);
+  const [token] = useContext(TokenContext);
   const navigate = useNavigate();
   useEffect(() => {
     socket.on("leave success", (data) => {

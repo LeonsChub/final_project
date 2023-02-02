@@ -20,10 +20,11 @@ function UserPage() {
         prevState.roomData = data.roomData;
         return prevState;
       });
-
-      // alert(JSON.stringify(roomData));
-
       navigate(`/myRoom/${data.roomData.roomId}`);
+    });
+
+    socket.on("join failed", (data) => {
+      console.log(data.msg);
     });
     return () => {
       socket.off("join success");
