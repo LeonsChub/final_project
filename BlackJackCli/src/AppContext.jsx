@@ -22,6 +22,7 @@ function AppContext({ children }) {
       players: [],
     },
     isConnected: false,
+    gameState: undefined,
   });
 
   return (

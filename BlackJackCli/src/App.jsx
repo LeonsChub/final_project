@@ -28,6 +28,7 @@ function App() {
 
     return () => {
       socket.off("connect");
+      socket.off("leave success");
       socket.off("disconnect");
     };
   });
