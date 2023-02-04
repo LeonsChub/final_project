@@ -13,8 +13,9 @@ function App() {
   const navigate = useNavigate();
   useEffect(() => {
     socket.on("leave success", (data) => {
+      console.log("leave", data);
       setRoomData({
-        roomData: {
+        sockData: {
           hostName: "",
           hostId: "",
           roomName: "",
@@ -23,7 +24,7 @@ function App() {
         },
         isConnected: false,
       });
-      navigate("/");
+      navigate("/", { replace: true });
     });
 
     return () => {
@@ -31,7 +32,11 @@ function App() {
       socket.off("leave success");
       socket.off("disconnect");
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    console.log(roomData);
+  }, [roomData]);
   return (
     <div className="App">
       <Navbar />

@@ -14,13 +14,15 @@ function UserPage() {
 
   useEffect(() => {
     socket.on("join success", (data) => {
+      // initRoomData(data.roomData);console.log("INNIINTING");
       setRoomData((prev) => {
-        const prevState = prev;
-        prevState.isConnected = true;
-        prevState.roomData = data.roomData;
-        return prevState;
+        const oldState = { ...prev };
+        oldState.isConnected = true;
+        oldState.sockData = data.roomData;
+
+        return oldState;
       });
-      navigate(`/myRoom/${data.roomData.roomId}`);
+      navigate(`/myRoom/${data.roomData.roomId}`, { replace: true });
     });
 
     socket.on("join failed", (data) => {

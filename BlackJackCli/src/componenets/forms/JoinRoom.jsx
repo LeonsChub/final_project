@@ -12,6 +12,8 @@ function JoinRoom() {
     socket.on("update rooms", (data) => {
       setRoomsToJoin(data.rooms);
     });
+
+    return () => socket.off("update rooms");
   }, []);
 
   return (

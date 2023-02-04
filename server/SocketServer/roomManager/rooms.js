@@ -45,7 +45,7 @@ const rmUserFromRoom = (roomId, userid) => {
     const roomIndex = rooms.findIndex((room) => {
       return room.roomId === roomId;
     });
-    if (rooms[roomIndex].players) {
+    if (rooms[roomIndex]) {
       const playerIndex = rooms[roomIndex].players.findIndex((player) => {
         return player.id === userid;
       });
@@ -87,15 +87,6 @@ const getRoomHost = (roomId) => {
   }
 };
 
-const setRefToRoom = (roomId, referee) => {
-  if (rooms.length > 0) {
-    const roomIndex = rooms.findIndex((room) => {
-      return room.roomId === roomId;
-    });
-
-    rooms[roomIndex].referee = referee;
-  }
-};
 module.exports = {
   createRoom,
   addRoom,
@@ -106,5 +97,4 @@ module.exports = {
   rmUserFromRoom,
   deleteRoom,
   getRoomHost,
-  setRefToRoom,
 };

@@ -14,7 +14,7 @@ function MyNavbar() {
   return (
     <Navbar bg="dark" variant="dark" className="d-flex align-items-center">
       <Container>
-        <Link to={roomData.isConnected ? "#" : "/"}>
+        <Link to="/">
           <Navbar.Brand href="#home">PokerLy</Navbar.Brand>
         </Link>
         <Navbar.Toggle />

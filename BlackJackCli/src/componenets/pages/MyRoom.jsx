@@ -1,12 +1,21 @@
 import React, { useContext } from "react";
 import { RoomContext } from "../../AppContext";
 import RoomCard from "../RoomCard";
+import PlayRoom from "./PlayRoom";
 
 function MyRoom() {
-  const [room] = useContext(RoomContext);
+  const [roomData] = useContext(RoomContext);
 
   return (
-    <div>{!room.isConnected ? <p>Not Connected To Room</p> : <RoomCard />}</div>
+    <div>
+      {!roomData.isConnected ? (
+        <p>Not Connected To Room</p>
+      ) : !roomData.gameState ? (
+        <RoomCard />
+      ) : (
+        <PlayRoom />
+      )}
+    </div>
   );
 }
 

@@ -116,6 +116,8 @@ function socketListenLeaveRoom(socket, io) {
         io.to(socket.id).emit("leave success", {
           msg: "leaving room...",
         });
+
+        console.log("leaving");
       }
     } else {
       console.log("NO DATA PROVIDED");
