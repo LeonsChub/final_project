@@ -1,0 +1,390 @@
+.pokerSpace {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgb(157, 36, 36);
+  background: radial-gradient(circle, rgb(157, 36, 36) 0%, rgb(0, 0, 0) 44%);
+  justify-content: center;
+  align-items: center;
+}
+.pokerTable {
+  height: 55%;
+  width: 40%;
+  background: rgb(36, 145, 54);
+  background: radial-gradient(
+    circle,
+    rgba(36, 145, 54, 1) 75%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  border-radius: 10em;
+  border: 10px solid rgb(32, 24, 24);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.tableCenter {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 30%;
+  width: 60%;
+  position: relative;
+  bottom: 8%;
+}
+.package {
+  border: 3px solid rgb(48, 46, 46);
+  height: 20%;
+  width: 8%;
+  border-radius: 8px;
+  position: relative;
+  bottom: 10%;
+}
+#flopPlace {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+  background-color: black;
+}
+#c1Place {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+}
+#c2Place {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+}
+#c3Place {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+}
+#c4Place {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+}
+#c5Place {
+  border: 3px solid rgb(48, 46, 46);
+  height: 70%;
+  width: 13%;
+  border-radius: 8px;
+}
+.seats {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+.pokerTable span {
+  height: 16%;
+  width: 10%;
+  border: 2px solid black;
+  border-radius: 35%;
+  background-color: rgba(79, 79, 79, 0.599);
+  position: absolute;
+}
+#seat1 {
+  bottom: -24%;
+}
+#seat2 {
+  bottom: -11%;
+  right: -8%;
+  transform: rotate(135deg);
+}
+#seat3 {
+  right: -15%;
+  transform: rotate(90deg);
+}
+#seat4 {
+  top: -11%;
+  right: -8%;
+  transform: rotate(45deg);
+}
+#seat5 {
+  top: -24%;
+  background-color: rgb(0, 0, 0);
+}
+#seat6 {
+  top: -11%;
+  left: -8%;
+  transform: rotate(135deg);
+}
+#seat7 {
+  left: -15%;
+  transform: rotate(90deg);
+}
+#seat8 {
+  bottom: -11%;
+  left: -8%;
+  transform: rotate(45deg);
+}
+.moneys {
+  height: 9%;
+  width: 6%;
+  background: rgb(145, 127, 36);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.moneyNum {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+}
+#money1 {
+  position: absolute;
+  bottom: -34%;
+}
+#money2 {
+  position: absolute;
+  bottom: -17%;
+  right: -12%;
+}
+#money3 {
+  position: absolute;
+  right: -22%;
+}
+#money4 {
+  position: absolute;
+  top: -17%;
+  right: -12%;
+}
+#money6 {
+  position: absolute;
+  top: -17%;
+  left: -12%;
+}
+#money7 {
+  position: absolute;
+  left: -22%;
+}
+#money8 {
+  position: absolute;
+  bottom: -17%;
+  left: -12%;
+}
+
+.pokerBtns {
+  height: 30%;
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  z-index: 999;
+  right: 2%;
+  bottom: 10%;
+}
+.pokerBtns button {
+  height: 30%;
+  width: 55%;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#fold {
+  font-family: "Metal Mania", cursive;
+  font-size: 150%;
+  background-color: transparent;
+  color: rgb(170, 35, 35);
+  border: 2px solid rgb(170, 35, 35);
+}
+#fold:hover {
+  background-color: rgb(170, 35, 35);
+  color: black;
+}
+#call {
+  font-family: "Metal Mania", cursive;
+  font-size: 150%;
+  background-color: transparent;
+  color: rgb(14, 94, 94);
+  border: 2px solid rgb(14, 94, 94);
+}
+#call:hover {
+  background-color: rgb(14, 94, 94);
+  color: black;
+}
+#raise {
+  font-family: "Metal Mania", cursive;
+  font-size: 150%;
+  background-color: transparent;
+  color: rgb(184, 160, 26);
+  border: 2px solid rgb(184, 160, 26);
+}
+
+#raise:hover {
+  background-color: rgb(184, 160, 26);
+  color: black;
+}
+.leftSide {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: -5%;
+  top: 5%;
+  height: 10%;
+  width: 30%;
+  z-index: 999;
+}
+#exitGame {
+  height: 90%;
+  width: 37%;
+  border-radius: 5%;
+  border: none;
+  font-size: 200%;
+  font-family: "Metal Mania", cursive;
+  cursor: pointer;
+  color: #68104b;
+  background-color: transparent;
+  border: 3px solid #68104b;
+}
+#exitGame:hover {
+  background-color: #68104b;
+  width: 37%;
+  color: rgb(0, 0, 0);
+}
+.sliderSpace {
+  height: 10%;
+  width: 20%;
+  display: flex;
+  z-index: 999;
+  position: absolute;
+  right: -2%;
+  top: 30%;
+  transform: rotate(270deg);
+}
+#sliderValue {
+  color: #8a1147;
+  position: absolute;
+  right: 2%;
+  top: 45%;
+  font-family: "Denk One", sans-serif;
+  font-size: 40px;
+  -webkit-animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1)
+    both;
+  animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.timerSpace {
+  height: 20%;
+  width: 20%;
+  display: flex;
+  z-index: 999;
+  position: absolute;
+  left: 4.5%;
+  top: 60%;
+  color: #68104b;
+  font-size: 50px;
+  font-family: "Denk One", sans-serif;
+}
+.bets {
+  height: 4%;
+  width: 3%;
+  background: rgba(6, 2, 2, 0.336);
+  border-radius: 15%;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  color: rgb(255, 255, 255);
+  font-family: "Denk One", sans-serif;
+}
+#bet1 {
+  position: absolute;
+  bottom: 25%;
+  left: 48.4%;
+}
+#bet2 {
+  position: absolute;
+  bottom: 28.5%;
+  right: 34.5%;
+}
+#bet3 {
+  position: absolute;
+  right: 31%;
+  bottom: 48%;
+}
+#bet4 {
+  position: absolute;
+  right: 34.5%;
+  top: 28.5%;
+}
+#bet6 {
+  position: absolute;
+  left: 34.5%;
+  top: 28.5%;
+}
+#bet7 {
+  position: absolute;
+  left: 31%;
+  bottom: 48%;
+}
+#bet8 {
+  position: absolute;
+  bottom: 28.5%;
+  left: 34.5%;
+}
+#allInBtn {
+  position: absolute;
+  right: 7%;
+  top: 10%;
+  z-index: 999;
+  border-radius: 5%;
+  border: none;
+  font-size: 200%;
+  font-family: "Metal Mania", cursive;
+  cursor: pointer;
+  color: #106168;
+  background-color: transparent;
+  border: 3px solid #106168;
+}
+#allInBtn:hover{
+  background-color: #106168;
+  color: #8a1147;
+}
+#confirmBtn {
+  position: absolute;
+  z-index: 999;
+  right: 11%;
+  bottom: 45%;
+  border-radius: 50%;
+  height: 12%;
+  width: 6%;
+  background-color: transparent;
+  color: green;
+  border: 3px solid green;
+  font-family: 'Graduate', cursive;
+  font-size: 100%;
+  cursor: pointer;
+  font-weight: bold;
+}
+#confirmBtn:hover {
+  background-color: rgb(0, 255, 0);
+  color: black;
+}
+.blindSpace{
+  display: flex;
+  position: relative;
+  top: 7%;
+  z-index: 999;
+  background-color: #68104b;
+  height: 4%;
+  width: 7%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+#blind{
+  font-family: 'Graduate', cursive;
+  color: gold;
+}
