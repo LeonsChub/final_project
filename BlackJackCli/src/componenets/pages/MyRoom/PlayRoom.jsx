@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomContext, SocketContext, TokenContext } from "../../AppContext";
-import Card from "../Card";
+import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import Card from "../../Card";
 import jwt from "jwt-decode";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

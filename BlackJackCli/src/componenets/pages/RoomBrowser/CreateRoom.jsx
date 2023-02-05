@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { SocketContext, TokenContext } from "../../AppContext";
+import { SocketContext, TokenContext } from "../../../AppContext";
+
 function CreateRoomForm() {
   const [name, setName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);

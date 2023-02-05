@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomContext, SocketContext, TokenContext } from "../AppContext";
-import {Card as BootCard} from "react-bootstrap";
+import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import { Card as BootCard } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +45,7 @@ function RoomCard() {
           Disband room
         </Button>
         <Button
-          disabled={roomData.sockData.players.length < 3}
+          disabled={roomData.sockData.players.length < 2}
           variant="success"
           onClick={() => {
             socket.emit("start game", {
@@ -54,7 +54,7 @@ function RoomCard() {
             });
           }}
         >
-          Start Game {roomData.sockData.players.length}/3
+          Start Game {roomData.sockData.players.length}/2
         </Button>
       </div>
     );
@@ -76,20 +76,16 @@ function RoomCard() {
   }
 
   return (
-  
-
     <div className="mx-auto w-50">
       <h1>{roomData.sockData.roomName}</h1>
-      <p className="mb-2 text-muted">
-          host: {roomData.sockData.hostName}
-        </p >
-        <p style={{ fontWeight: "bold" }}>Players:</p>
-          <p className="px-2">
-          {roomData.sockData.players.map((p, index) => (
-            <p key={index}>{p.name}</p>
-          ))}
-        </p>
-        {isAdmin ? renderAdminButtons() : renderPlayerButton()}
+      <p className="mb-2 text-muted">host: {roomData.sockData.hostName}</p>
+      <p style={{ fontWeight: "bold" }}>Players:</p>
+      <p className="px-2">
+        {roomData.sockData.players.map((p, index) => (
+          <p key={index}>{p.name}</p>
+        ))}
+      </p>
+      {isAdmin ? renderAdminButtons() : renderPlayerButton()}
     </div>
   );
 

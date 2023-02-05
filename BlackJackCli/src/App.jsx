@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import LoginPage from "./componenets/pages/LoginPage";
 import { RoomContext, SocketContext, TokenContext } from "./AppContext";
-import MyRoom from "./componenets/pages/MyRoom";
+import MyRoom from "./componenets/pages/MyRoom/MyRoom";
 import Welcome from "../src/componenets/pages/Welcome";
 import Login from "../src/componenets/pages/Login";
 import Main from "../../clientGorali/src/components/mainComp/Main";
