@@ -1,12 +1,12 @@
 import React from "react";
-import { TokenContext, SocketContext, RoomContext } from "../../AppContext";
+import { TokenContext, SocketContext, RoomContext } from "../../../AppContext";
 import { useContext, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
-import CreateRoomForm from "../forms/CreateRoomForm";
-import JoinRoom from "../forms/JoinRoom";
+import CreateRoomForm from '../../forms/CreateRoomForm'
+import JoinRoom from "../../forms/JoinRoom";
 import { useNavigate } from "react-router-dom";
 
-function UserPage() {
+function RoomBrowser() {
   const [token] = useContext(TokenContext);
   const socket = useContext(SocketContext);
   const [roomData, setRoomData] = useContext(RoomContext);
@@ -55,4 +55,4 @@ function UserPage() {
   }
 }
 
-export default UserPage;
+export default RoomBrowser;

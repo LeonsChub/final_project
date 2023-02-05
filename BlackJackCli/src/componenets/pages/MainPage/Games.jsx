@@ -14,8 +14,8 @@ const Games = () => {
       </div>
       <div className="cards">
         <div className="card">
-          <div onClick={()=>{navigate("/poker")}} className="middleCard">
-            <p>Poker</p>
+          <div onClick={()=>{navigate("/room browser")}} className="middleCard">
+            <p>Join Room</p>
           </div>
         </div>
         <div className="card">

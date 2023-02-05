@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { RoomContext, SocketContext, TokenContext } from "../AppContext";
-import Card from "react-bootstrap/Card";
+import {Card as BootCard} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ function RoomCard() {
               auth: token,
               roomId: roomData.sockData.roomId,
             });
-            navigate("/", { replace: true });
+            navigate("/room browser", { replace: true });
           }}
         >
           Disband room
@@ -76,22 +76,21 @@ function RoomCard() {
   }
 
   return (
-    <Card className="mx-auto w-50">
-      <Card.Body>
-        <Card.Title>{roomData.sockData.roomName}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
+  
+
+    <div className="mx-auto w-50">
+      <h1>{roomData.sockData.roomName}</h1>
+      <p className="mb-2 text-muted">
           host: {roomData.sockData.hostName}
-        </Card.Subtitle>
-        <Card.Text style={{ fontWeight: "bold" }}>Players:</Card.Text>
-        <Card.Text className="px-2">
+        </p >
+        <p style={{ fontWeight: "bold" }}>Players:</p>
+          <p className="px-2">
           {roomData.sockData.players.map((p, index) => (
             <p key={index}>{p.name}</p>
           ))}
-        </Card.Text>
-
+        </p>
         {isAdmin ? renderAdminButtons() : renderPlayerButton()}
-      </Card.Body>
-    </Card>
+    </div>
   );
 
   function setUpListenets(socket) {
