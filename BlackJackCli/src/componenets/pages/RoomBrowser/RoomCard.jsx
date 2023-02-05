@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
-import { Card as BootCard } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+// import { Card as BootCard } from "react-bootstrap";
+// import Button from "react-bootstrap/Button";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ function RoomCard() {
   function renderAdminButtons() {
     return (
       <div className="w-100 d-flex justify-content-between">
-        <Button
+        <button
           variant="danger"
           onClick={() => {
             socket.emit("disband room", {
@@ -43,8 +43,8 @@ function RoomCard() {
           }}
         >
           Disband room
-        </Button>
-        <Button
+        </button>
+        <button
           disabled={roomData.sockData.players.length < 2}
           variant="success"
           onClick={() => {
@@ -55,7 +55,7 @@ function RoomCard() {
           }}
         >
           Start Game {roomData.sockData.players.length}/2
-        </Button>
+        </button>
       </div>
     );
   }

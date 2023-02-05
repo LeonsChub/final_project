@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { SocketContext, TokenContext } from "../../../AppContext";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 
 function JoinRoom() {
   const socket = useContext(SocketContext);

@@ -18,7 +18,7 @@ const Header = () => {
       </div>
       <div className="headerItems">
         <a onClick={profileClick} id="statsHeader">
-          My stats
+          My profile
         </a>
       </div>
       <div className="headerItems">

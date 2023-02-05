@@ -83,6 +83,8 @@
   display: flex;
   height: 100%;
   width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 .pokerTable span {
   height: 16%;
@@ -93,39 +95,39 @@
   position: absolute;
 }
 #seat1 {
-  bottom: -24%;
+  top: -11%;
+  right: -8%;
+  transform: rotate(45deg);
 }
 #seat2 {
-  bottom: -11%;
-  right: -8%;
-  transform: rotate(135deg);
-}
-#seat3 {
   right: -15%;
   transform: rotate(90deg);
 }
-#seat4 {
-  top: -11%;
+#seat3 {
+  bottom: -11%;
   right: -8%;
-  transform: rotate(45deg);
+  transform: rotate(135deg);
+}
+#seat4 {
+  bottom: -24%;
 }
 #seat5 {
-  top: -24%;
-  background-color: rgb(0, 0, 0);
+  bottom: -11%;
+  left: -8%;
+  transform: rotate(45deg);
 }
 #seat6 {
+  left: -15%;
+  transform: rotate(90deg);
+}
+#seat7 {
   top: -11%;
   left: -8%;
   transform: rotate(135deg);
 }
-#seat7 {
-  left: -15%;
-  transform: rotate(90deg);
-}
 #seat8 {
-  bottom: -11%;
-  left: -8%;
-  transform: rotate(45deg);
+  top: -24%;
+  background-color: rgb(0, 0, 0);
 }
 .moneys {
   height: 9%;
@@ -142,37 +144,36 @@
 }
 #money1 {
   position: absolute;
-  bottom: -34%;
+  top: -17%;
+  right: -12%;
 }
 #money2 {
   position: absolute;
-  bottom: -17%;
-  right: -12%;
+  right: -22%;
 }
 #money3 {
   position: absolute;
-  right: -22%;
+  bottom: -17%;
+  right: -12%;
 }
 #money4 {
   position: absolute;
-  top: -17%;
-  right: -12%;
+  bottom: -34%;
 }
-#money6 {
-  position: absolute;
-  top: -17%;
-  left: -12%;
-}
-#money7 {
-  position: absolute;
-  left: -22%;
-}
-#money8 {
+#money5 {
   position: absolute;
   bottom: -17%;
   left: -12%;
 }
-
+#money6 {
+  position: absolute;
+  left: -22%;
+}
+#money7 {
+  position: absolute;
+  top: -17%;
+  left: -12%;
+}
 .pokerBtns {
   height: 30%;
   width: 15%;
@@ -299,37 +300,37 @@
   color: rgb(255, 255, 255);
   font-family: "Denk One", sans-serif;
 }
-#bet1 {
+#bet4 {
   position: absolute;
   bottom: 25%;
   left: 48.4%;
 }
-#bet2 {
+#bet3 {
   position: absolute;
   bottom: 28.5%;
   right: 34.5%;
 }
-#bet3 {
+#bet2 {
   position: absolute;
   right: 31%;
   bottom: 48%;
 }
-#bet4 {
+#bet1 {
   position: absolute;
   right: 34.5%;
   top: 28.5%;
 }
-#bet6 {
+#bet5 {
   position: absolute;
   left: 34.5%;
   top: 28.5%;
 }
-#bet7 {
+#bet6 {
   position: absolute;
   left: 31%;
   bottom: 48%;
 }
-#bet8 {
+#bet7 {
   position: absolute;
   bottom: 28.5%;
   left: 34.5%;

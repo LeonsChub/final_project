@@ -4,12 +4,12 @@ import "./css/poker.css";
 import Timer from "./context/Timer";
 import { useCountdown } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
-import { Slider } from "rc-slider";
 
 const Poker = () => {
-  const num = 0;
   const navigate = useNavigate();
+  const num = 0;
   const [blind, setBlind] = useState(5);
+  const [minBet, setMinBet] = useState(blind);
   const [raise, setRaise] = useState(false);
   const [myChips, setMyChips] = useState(5000);
   const [value, setValue] = useState(0);
@@ -31,6 +31,20 @@ const Poker = () => {
     setCurrentBet(value);
     setBet(value);
     setRaise(!raise);
+  };
+  const handleFold = async (e) => {
+    e.preventDefault();
+    // socket.emit('player folded',{playerData:{id:}})
+  };
+  const handleCall = async (e) => {
+    e.preventDefault();
+    // socket.emit('player called',{playerData:{id:}})
+  };
+  const handleRaise = async (e) => {
+    e.preventDefault();
+    setRaise(!raise);
+    setMinBet(minBet + value);
+    // socket.emit('player raised',{playerData:{id:, minBet:}})
   };
   return (
     <div className="pokerSpace">
@@ -75,25 +89,30 @@ const Poker = () => {
         <p id="blind">Blind: {blind}</p>
       </div>
       <div className="pokerBtns">
-        <button id="raise" onClick={() => setRaise(!raise)}>
+        <button id="raise" onClick={(e) => handleRaise(e)}>
           Raise
         </button>
-        <button onClick={() => setTimer(!timer)} id="call">
+        <button onClick={(e) => handleCall(e)} id="call">
           Call
         </button>
-        <button id="fold">Fold</button>
+        <button id="fold" onClick={(e) => handleFold(e)}>
+          Fold
+        </button>
       </div>
       <div>
         <p className="bets" id="bet1">
-          {bet}
+          {num + blind * 0.5}
         </p>
         <p className="bets" id="bet2">
-          {num}
+          {num + blind}
         </p>
         <p className="bets" id="bet3">
           {num}
         </p>
         <p className="bets" id="bet4">
+          {num}
+        </p>
+        <p className="bets" id="bet5">
           {num}
         </p>
         <p className="bets" id="bet6">
@@ -102,21 +121,18 @@ const Poker = () => {
         <p className="bets" id="bet7">
           {num}
         </p>
-        <p className="bets" id="bet8">
-          {num}
-        </p>
       </div>
       <div className="pokerTable">
-        <span id="seat1"></span>
-        <span id="seat2"></span>
-        <span id="seat3"></span>
-        <span id="seat4"></span>
-        <span id="seat5"></span>
-        <span id="seat6"></span>
-        <span id="seat7"></span>
-        <span id="seat8"></span>
+        <span className="seats" id="seat1"></span>
+        <span className="seats" id="seat2"></span>
+        <span className="seats" id="seat3"></span>
+        <span className="seats" id="seat4"></span>
+        <span className="seats" id="seat5"></span>
+        <span className="seats" id="seat6"></span>
+        <span className="seats" id="seat7"></span>
+        <span className="seats" id="seat8"></span>
         <div id="money1" className="moneys">
-          <p className="moneyNum">{myChips}</p>
+          <p className="moneyNum">{num}</p>
         </div>
         <div id="money2" className="moneys">
           <p className="moneyNum">{num}</p>
@@ -127,13 +143,13 @@ const Poker = () => {
         <div id="money4" className="moneys">
           <p className="moneyNum">{num}</p>
         </div>
+        <div id="money5" className="moneys">
+          <p className="moneyNum">{num}</p>
+        </div>
         <div id="money6" className="moneys">
           <p className="moneyNum">{num}</p>
         </div>
         <div id="money7" className="moneys">
-          <p className="moneyNum">{num}</p>
-        </div>
-        <div id="money8" className="moneys">
           <p className="moneyNum">{num}</p>
         </div>
         <div className="package"></div>

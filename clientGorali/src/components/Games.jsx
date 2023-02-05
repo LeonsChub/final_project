@@ -12,7 +12,7 @@ const Games = () => {
       </div>
       <div className="cards">
         <div className="card">
-          <div onClick={()=>{navigate("/poker")}} className="middleCard">
+          <div onClick={()=>{navigate("/rooms")}} className="middleCard">
             <p>Poker</p>
           </div>
         </div>

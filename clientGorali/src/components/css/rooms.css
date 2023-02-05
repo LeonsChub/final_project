@@ -1,0 +1,154 @@
+.roomsPage {
+  height: 100vh;
+  width: 100%;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: aliceblue;
+}
+.roomsPage button {
+  background-color: black;
+  color: aliceblue;
+  border-radius: 10%;
+  height: 45%;
+  font-family: "Metal Mania", cursive;
+  cursor: pointer;
+  font-size: 150%;
+}
+.roomsPage button:hover {
+  background-color: transparent;
+  color: black;
+}
+.joinRoomBtn {
+  width: 100%;
+}
+.roomsSpace {
+  height: 80%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+  background: rgb(20, 52, 52);
+  background: linear-gradient(
+    0deg,
+    rgba(20, 52, 52, 1) 0%,
+    rgba(116, 253, 45, 1) 100%
+  );
+  border-radius: 10px;
+  box-shadow: 4px 3px 6px 3px rgba(0, 99, 46, 0.707);
+}
+.roomsHeader {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: black;
+  font-size: 250%;
+  font-family: "Metal Mania", cursive;
+}
+.allRooms {
+  height: 75%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.room {
+  display: flex;
+  width: 95%;
+  height: 20%;
+  box-shadow: 5px 5px 5px black;
+  border: 2px solid white;
+  border-radius: 10px;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+.roomName {
+  font-family: "Denk One", sans-serif;
+  max-width: 20%;
+}
+.roomHost {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 15%;
+}
+.roomPlayers {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 40%;
+}
+.roomTitle {
+  color: rgb(0, 46, 0);
+}
+.roomsBtns {
+  min-height: 15%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.roomsFormSpace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 90%;
+  width: 100%;
+  gap: 10%;
+}
+.privateRoom {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 3%;
+  font-size: 150%;
+  color: black;
+  font-family: "Metal Mania", cursive;
+}
+.roomPassword {
+  display: flex;
+  flex-direction: column;
+  height: 10%;
+  gap: 25%;
+}
+.roomNameTitle {
+  display: flex;
+  flex-direction: column;
+  height: 15%;
+  width: 30%;
+  gap: 50%;
+}
+.roomInp {
+  background-color: transparent;
+  border: none;
+  border-bottom: 5px solid black;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 150%;
+  font-family: "Metal Mania", cursive;
+}
+.roomTitle {
+  font-size: 150%;
+  font-family: "Metal Mania", cursive;
+}
+.players{
+    font-family: 'Denk One', sans-serif;
+
+}
+.hosts{
+    font-family: 'Denk One', sans-serif;
+
+}

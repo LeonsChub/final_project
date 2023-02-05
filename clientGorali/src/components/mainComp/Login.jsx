@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import { axios } from "axios";
+import axios from "axios";
 import { baseURL } from "./../../config";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate()
   const [login, setLogin] = useState({});
   const handleSubmit = async () => {
     try {
-      const result = await axios.post(`${baseURL}/login`, login);
+      console.log(login);
+      const result = await axios.post(`${baseURL}/users`, login);
+      console.log(result);
+      navigate('/main')
     } catch (err) {
-      res.status(400).send(err.message);
+      console.log(err.message);
     }
   };
   return (

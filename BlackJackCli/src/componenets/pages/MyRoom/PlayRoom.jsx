@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
 import Card from "../../Card";
 import jwt from "jwt-decode";
-import { Button } from "react-bootstrap";
+// import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function PlayRoom() {
@@ -104,7 +104,7 @@ function PlayRoom() {
         })}
       </div>
 
-      <Button
+      <button
         onClick={() => {
           setRoomData((prev) => {
             const oldState = { ...prev };
@@ -116,7 +116,7 @@ function PlayRoom() {
         }}
       >
         Leave Game
-      </Button>
+      </button>
     </div>
   );
 }
