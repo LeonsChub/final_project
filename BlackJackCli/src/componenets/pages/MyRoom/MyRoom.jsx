@@ -9,13 +9,7 @@ function MyRoom() {
 
   return (
     <div>
-      {!roomData.isConnected ? (
-        <p>Not Connected To Room</p>
-      ) : !roomData.gameState ? (
-        <RoomCard />
-      ) : (
-        <Poker />
-      )}
+      {!roomData.isConnected ? <p>Not Connected To Room</p> : <Poker />}
     </div>
   );
 }

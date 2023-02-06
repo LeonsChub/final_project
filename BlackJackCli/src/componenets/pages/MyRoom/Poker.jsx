@@ -20,7 +20,7 @@ const Poker = () => {
   const [raise, setRaise] = useState(false);
   const [value, setValue] = useState(0);
   const [timer, setTimer] = useState(false);
-  const [bet, setBet] = useState(0);
+  const [bet, setBet] = useState(roomData.gameState.blind);
   const [currentBet, setCurrentBet] = useState(0);
   const {
     path,
@@ -138,44 +138,17 @@ const Poker = () => {
         <button id="fold">Fold</button>
       </div>
       <div>
-        <p className="bets" id="bet1"></p>
-        <p className="bets" id="bet2"></p>
-        <p className="bets" id="bet3"></p>
-        <p className="bets" id="bet4"></p>
-        <p className="bets" id="bet6"></p>
-        <p className="bets" id="bet7"></p>
-        <p className="bets" id="bet8"></p>
+        {roomData.sockData.players.map((p, index) => {
+          return bets(index + 1);
+        })}
       </div>
       <div className="pokerTable">
-        <span id="seat1"></span>
-        <span id="seat2"></span>
-        <span id="seat3"></span>
-        <span id="seat4"></span>
-        <span id="seat5"></span>
-        <span id="seat6"></span>
-        <span id="seat7"></span>
-        <span id="seat8"></span>
-        <div id="money1" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money2" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money3" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money4" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money6" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money7" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
-        <div id="money8" className="moneys">
-          <p className="moneyNum"></p>
-        </div>
+        {roomData.sockData.players.map((p, index) => {
+          return seats(index + 1);
+        })}
+        {roomData.sockData.players.map((p, index) => {
+          return moneys(index + 1);
+        })}
         <div className="package"></div>
         <div className="tableCenter">
           <div id="flopPlace"></div>
@@ -190,4 +163,17 @@ const Poker = () => {
   );
 };
 
+function bets(i) {
+  return <p className="bets" id={`bet${i}`}></p>;
+}
+function seats(i) {
+  return <span id={`seat${i}`}></span>;
+}
+function moneys(i) {
+  return (
+    <div id={`money${i}`} className="moneys">
+      <p className="moneyNum"></p>
+    </div>
+  );
+}
 export default Poker;

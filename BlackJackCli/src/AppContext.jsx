@@ -23,8 +23,16 @@ function AppContext({ children }) {
       players: [],
     },
     isConnected: false,
-    gameState: undefined,
-  });
+    gameState: {
+      deck: [],
+      players: [],
+      community: [],
+      burned: [],
+      roundInfo: {},
+      pot: 0,
+      blind: 0,
+      gameStage: "",
+    }  });
 
   function updateGameState() {
     setRoomData((prev) => {

@@ -10,6 +10,7 @@ import "./styles/index.css";
 import IndexPage from "./componenets/pages/IndexPage";
 import RoomBrowser from "./componenets/pages/RoomBrowser/RoomBrowser";
 import Rooms from "./componenets/pages/RoomBrowser/Rooms";
+import Poker from '../src/componenets/pages/MyRoom/Poker';
 
 function App() {
   const socket = useContext(SocketContext);
@@ -51,7 +52,7 @@ function App() {
         <Route path="/room browser" element={<Rooms />} />
         {/* <Route path="/signup" element={<Signup />} /> */}
         {/* <Route path="/login" element={<Login />} /> */}
-        {/* <Route path="/poker" element={<Poker />} /> */}
+        <Route path="/poker" element={<Poker />} />
         {/* <Route path="/" element={<UserPage />} /> */}
         <Route path="myRoom/:id" element={<MyRoom />} />
       </Routes>
