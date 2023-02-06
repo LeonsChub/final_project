@@ -34,7 +34,7 @@ class Player {
     this.stake = this.minEntry;
     this.chips = this.chips - this.minEntry;
 
-    return this.minEntry;
+    return this.minEntry / 2;
   }
 }
 
