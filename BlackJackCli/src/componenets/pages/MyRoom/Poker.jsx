@@ -83,7 +83,7 @@ const Poker = () => {
             <MySlider
               value={value}
               setValue={setValue}
-              myChips={myChips}
+              myChips={5000}
               currentBet={currentBet}
             />
           </div>
@@ -122,10 +122,10 @@ const Poker = () => {
             });
           }}
         >
-          Casino menu
+          Leave game
         </button>
         <div>
-          <h3 id="roomName">room: {roomData.sockData.roomName}</h3>
+          <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
         </div>
       </div>
       <div className="blindSpace">
@@ -146,7 +146,7 @@ const Poker = () => {
         })}
       </div>
       <div className="pokerTable">
-        <span id="dealerSeat"></span>;
+        <span id="dealerSeat">Dealer</span>;
         {roomData.sockData.players.map((p, index) => {
           return seats(index + 1);
         })}

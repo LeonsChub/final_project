@@ -6,6 +6,12 @@
   align-items: center;
   justify-content: center;
   color: aliceblue;
+  background: rgb(195, 25, 25);
+  background: radial-gradient(
+    circle,
+    rgba(195, 25, 25, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
 }
 .roomsPage button {
   background-color: black;

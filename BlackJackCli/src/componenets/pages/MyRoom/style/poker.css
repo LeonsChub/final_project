@@ -34,7 +34,7 @@
   position: relative;
   /* left: 350%; */
   font-size: 150%;
-  font-family: "Metal Mania", cursive;
+  font-family: 'Righteous', cursive;
 }
 .tableCenter {
   display: flex;
@@ -142,6 +142,13 @@
   top: -24%;
   background-color: rgb(0, 0, 0);
   text-align: center;
+  width: 30%;
+  font-size: 200%;
+  font-family: "Metal Mania", cursive;
+  display: flex;
+  color: rgb(203, 145, 0);
+  justify-content: center;
+  align-items: center;
 }
 #seat5 {
   top: -11%;
@@ -272,19 +279,18 @@
 }
 #exitGame {
   height: 90%;
-  width: 37%;
+  width: 50%;
   border-radius: 5%;
   border: none;
   font-size: 200%;
-  font-family: "Metal Mania", cursive;
   cursor: pointer;
   color: rgb(207, 0, 114);
   background-color: transparent;
   border: 3px solid rgb(207, 0, 114);
+  font-family: 'Righteous', cursive;
 }
 #exitGame:hover {
-  background-color: #68104b;
-  width: 37%;
+  background-color: rgb(207, 0, 114);
   color: rgb(0, 0, 0);
 }
 .sliderSpace {
