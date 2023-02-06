@@ -61,7 +61,7 @@ function RoomCard() {
   }
   function renderPlayerButton() {
     return (
-      <Button
+      <button
         variant="danger"
         onClick={() => {
           socket.emit("leave room", {
@@ -71,7 +71,7 @@ function RoomCard() {
         }}
       >
         Leave room
-      </Button>
+      </button>
     );
   }
 
