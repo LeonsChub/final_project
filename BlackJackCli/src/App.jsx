@@ -5,7 +5,7 @@ import { RoomContext, SocketContext, TokenContext } from "./AppContext";
 import MyRoom from "./componenets/pages/MyRoom/MyRoom";
 import Welcome from "../src/componenets/pages/Welcome";
 import Login from "../src/componenets/pages/Login";
-import Main from "../../clientGorali/src/components/mainComp/Main";
+import Main from "./componenets/pages/MainPage/Main";
 import "./styles/index.css";
 import IndexPage from "./componenets/pages/IndexPage";
 import RoomBrowser from "./componenets/pages/RoomBrowser/RoomBrowser";
