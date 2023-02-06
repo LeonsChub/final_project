@@ -34,6 +34,7 @@ const pokerRef = (socket, io, roomId) => {
       bbIndex: 1, //bbindex
     },
     pot: 0,
+    blind: 20,
     gameStage: "preflop",
   };
 
@@ -41,8 +42,8 @@ const pokerRef = (socket, io, roomId) => {
 
   //determine blinds
   const { sbIndex, bbIndex } = gameState.roundInfo;
-  addToPot(gameState.players[sbIndex].setSmallBlind()); // get small blind entry and add it to pot in game state
-  addToPot(gameState.players[bbIndex].setBigBlind()); // get small blind entry and add it to pot in game state
+  addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+  addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
   //hand cards to each player
   gameState.players.forEach((player) => {
     const hand = [];
@@ -51,7 +52,7 @@ const pokerRef = (socket, io, roomId) => {
 
     updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
   });
-
+  console.log(`Emitting ${JSON.stringify(gameState)}`);
   io.to(roomId).emit("handing cards", gameState); // update
 };
 
