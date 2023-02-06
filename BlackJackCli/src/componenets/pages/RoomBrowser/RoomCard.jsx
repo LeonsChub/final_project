@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomContext, SocketContext, TokenContext } from "../AppContext";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+// import { Card as BootCard } from "react-bootstrap";
+// import Button from "react-bootstrap/Button";
 import jwt from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
@@ -32,20 +32,20 @@ function RoomCard() {
   function renderAdminButtons() {
     return (
       <div className="w-100 d-flex justify-content-between">
-        <Button
+        <button
           variant="danger"
           onClick={() => {
             socket.emit("disband room", {
               auth: token,
               roomId: roomData.sockData.roomId,
             });
-            navigate("/", { replace: true });
+            navigate("/room browser", { replace: true });
           }}
         >
           Disband room
-        </Button>
-        <Button
-          disabled={roomData.sockData.players.length < 3}
+        </button>
+        <button
+          disabled={roomData.sockData.players.length < 2}
           variant="success"
           onClick={() => {
             socket.emit("start game", {
@@ -54,14 +54,14 @@ function RoomCard() {
             });
           }}
         >
-          Start Game {roomData.sockData.players.length}/3
-        </Button>
+          Start Game {roomData.sockData.players.length}/2
+        </button>
       </div>
     );
   }
   function renderPlayerButton() {
     return (
-      <Button
+      <button
         variant="danger"
         onClick={() => {
           socket.emit("leave room", {
@@ -71,27 +71,22 @@ function RoomCard() {
         }}
       >
         Leave room
-      </Button>
+      </button>
     );
   }
 
   return (
-    <Card className="mx-auto w-50">
-      <Card.Body>
-        <Card.Title>{roomData.sockData.roomName}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
-          host: {roomData.sockData.hostName}
-        </Card.Subtitle>
-        <Card.Text style={{ fontWeight: "bold" }}>Players:</Card.Text>
-        <Card.Text className="px-2">
-          {roomData.sockData.players.map((p, index) => (
-            <p key={index}>{p.name}</p>
-          ))}
-        </Card.Text>
-
-        {isAdmin ? renderAdminButtons() : renderPlayerButton()}
-      </Card.Body>
-    </Card>
+    <div className="mx-auto w-50">
+      <h1>{roomData.sockData.roomName}</h1>
+      <p className="mb-2 text-muted">host: {roomData.sockData.hostName}</p>
+      <p style={{ fontWeight: "bold" }}>Players:</p>
+      <p className="px-2">
+        {roomData.sockData.players.map((p, index) => (
+          <p key={index}>{p.name}</p>
+        ))}
+      </p>
+      {isAdmin ? renderAdminButtons() : renderPlayerButton()}
+    </div>
   );
 
   function setUpListenets(socket) {

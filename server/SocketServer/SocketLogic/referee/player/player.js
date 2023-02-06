@@ -12,7 +12,6 @@ class Player {
     this.allIn = false;
     this.specialAttrs = [];
     this.win = false;
-    this.minEntry = 20;
   }
 
   setCards(cards) {
@@ -20,21 +19,21 @@ class Player {
       this.cards = [...cards];
     }
   }
-  setSmallBlind() {
+  setSmallBlind(blind) {
     // set player as being the small blind
     this.specialAttrs.push("small blind");
-    this.stake = this.minEntry / 2;
-    this.chips = this.chips - this.minEntry / 2;
+    this.stake = blind / 2;
+    this.chips = this.chips - blind / 2;
 
-    return this.minEntry / 2;
+    return blind / 2;
   }
-  setBigBlind() {
+  setBigBlind(blind) {
     // set player as being the small blind
     this.specialAttrs.push("big blind");
-    this.stake = this.minEntry;
-    this.chips = this.chips - this.minEntry;
+    this.stake = blind;
+    this.chips = this.chips - blind;
 
-    return this.minEntry;
+    return blind;
   }
 }
 

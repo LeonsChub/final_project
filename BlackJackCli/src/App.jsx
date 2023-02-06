@@ -1,11 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Navbar from "./componenets/Navbar";
 import LoginPage from "./componenets/pages/LoginPage";
-import UserPage from "./componenets/pages/UserPage";
 import { RoomContext, SocketContext, TokenContext } from "./AppContext";
-import MyRoom from "./componenets/pages/MyRoom";
+import MyRoom from "./componenets/pages/MyRoom/MyRoom";
+import Welcome from "../src/componenets/pages/Welcome";
+import Login from "../src/componenets/pages/Login";
+import Main from "../../clientGorali/src/components/mainComp/Main";
+import "./styles/index.css";
+import IndexPage from "./componenets/pages/IndexPage";
+import RoomBrowser from "./componenets/pages/RoomBrowser/RoomBrowser";
+import Rooms from "./componenets/pages/RoomBrowser/Rooms";
+
 function App() {
   const socket = useContext(SocketContext);
   const [roomData, setRoomData] = useContext(RoomContext);
@@ -39,10 +44,15 @@ function App() {
   }, [roomData]);
   return (
     <div className="App">
-      <Navbar />
       <Routes>
-        <Route path="/" element={<UserPage />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/" element={<IndexPage />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/room browser" element={<Rooms />} />
+        {/* <Route path="/signup" element={<Signup />} /> */}
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/poker" element={<Poker />} /> */}
+        {/* <Route path="/" element={<UserPage />} /> */}
         <Route path="myRoom/:id" element={<MyRoom />} />
       </Routes>
     </div>
