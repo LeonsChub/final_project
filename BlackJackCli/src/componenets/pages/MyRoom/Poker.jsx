@@ -9,7 +9,7 @@ import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
 import jwt from "jwt-decode";
 
 const Poker = () => {
-  const [roomData, setRoomData] = useContext(RoomContext);
+  const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const socket = useContext(SocketContext);
   const [token] = useContext(TokenContext);
   const { user_id } = jwt(token);
@@ -34,22 +34,7 @@ const Poker = () => {
   } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
 
   useEffect(() => {
-    socket.on("handing cards", (data) => {
-      console.log("get hand");
-      setRoomData((prev) => {
-        const oldState = { ...prev };
-        oldState.gameState = data;
-        return oldState;
-      });
-    });
-
-    socket.on("update gamestate", (data) => {
-      setRoomData((prev) => {
-        const oldState = { ...prev };
-        oldState.gameState = data;
-        return oldState;
-      });
-    });
+    initListeners();
 
     return () => {
       if (mountRef.current) {
@@ -60,7 +45,8 @@ const Poker = () => {
 
         setRoomData((prev) => {
           const oldState = { ...prev };
-          oldState.gameState = undefined;
+
+          oldState.gameState = blankGameState();
           return oldState;
         });
       }
@@ -83,14 +69,14 @@ const Poker = () => {
             <MySlider
               value={value}
               setValue={setValue}
-              myChips={myChips}
-              currentBet={currentBet}
+              myChips={22}
+              currentBet={12}
             />
           </div>
           <button
             className="sliderWithValues"
             id="allInBtn"
-            onClick={() => setValue(myChips)}
+            onClick={() => setValue(22)}
           >
             ALL IN
           </button>
@@ -114,9 +100,10 @@ const Poker = () => {
           id="exitGame"
           onClick={() => {
             navigate("/");
+            socket.emit("leave room");
             setRoomData((prev) => {
               const oldState = { ...prev };
-              oldState.gameState = undefined;
+              oldState.gameState = blankGameState();
               oldState.isConnected = false;
               return oldState;
             });
@@ -161,6 +148,67 @@ const Poker = () => {
       </div>
     </div>
   );
+  function initListeners() {
+    socket.on("handing cards", (data) => {
+      console.log("get hand");
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        return oldState;
+      });
+    });
+
+    socket.on("update gamestate", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        return oldState;
+      });
+    });
+
+    socket.on("user joined", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.sockData = data;
+        return oldState;
+      });
+    });
+
+    socket.on("user left", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.sockData = data;
+        return oldState;
+      });
+    });
+
+    socket.on("kick user", () => {
+      socket.emit("leave room", {
+        auth: token,
+        roomId: getRoomById(),
+      });
+    });
+
+    socket.on("ref ready", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        return oldState;
+      });
+    });
+
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = "";
+    });
+
+    window.addEventListener("unload", function (e) {
+      socket.emit("leave room", {
+        roomId: roomData.sockData.roomId,
+        auth: token,
+      });
+    });
+  }
 };
 
 function bets(i) {
@@ -176,4 +224,5 @@ function moneys(i) {
     </div>
   );
 }
+
 export default Poker;

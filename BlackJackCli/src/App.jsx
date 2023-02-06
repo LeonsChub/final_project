@@ -10,11 +10,11 @@ import "./styles/index.css";
 import IndexPage from "./componenets/pages/IndexPage";
 import RoomBrowser from "./componenets/pages/RoomBrowser/RoomBrowser";
 import Rooms from "./componenets/pages/RoomBrowser/Rooms";
-import Poker from '../src/componenets/pages/MyRoom/Poker';
+import Poker from "../src/componenets/pages/MyRoom/Poker";
 
 function App() {
   const socket = useContext(SocketContext);
-  const [roomData, setRoomData] = useContext(RoomContext);
+  const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const [token] = useContext(TokenContext);
   const navigate = useNavigate();
   useEffect(() => {
@@ -29,6 +29,7 @@ function App() {
           players: [],
         },
         isConnected: false,
+        gameState: blankGameState(),
       });
       navigate("/", { replace: true });
     });

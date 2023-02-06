@@ -13,6 +13,7 @@ const {
 
 const jwt = require("jsonwebtoken");
 const pokerRef = require("./referee/pokerRef");
+const MAX_PLAYERS = 7;
 
 function initSocket(io) {
   io.on("connection", (socket) => {
@@ -78,7 +79,7 @@ function socketListenJoinRoom(socket, io) {
     if (data) {
       const decoded = authToken(data.auth);
       if (decoded && data.roomId && getRoomById(data.roomId)) {
-        if (getRoomById(data.roomId).players.length < 4) {
+        if (getRoomById(data.roomId).players.length < MAX_PLAYERS) {
           const playerData = { id: decoded.user_id, name: decoded.username };
           socket.join(data.roomId);
           addUserToRoom(data.roomId, playerData);
