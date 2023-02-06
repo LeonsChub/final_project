@@ -124,6 +124,9 @@ const Poker = () => {
         >
           Casino menu
         </button>
+        <div>
+          <h3 id="roomName">room: {roomData.sockData.roomName}</h3>
+        </div>
       </div>
       <div className="blindSpace">
         <p id="blind">Blind: {roomData.gameState.blind}</p>
@@ -143,6 +146,7 @@ const Poker = () => {
         })}
       </div>
       <div className="pokerTable">
+        <span id="dealerSeat"></span>;
         {roomData.sockData.players.map((p, index) => {
           return seats(index + 1);
         })}
@@ -161,19 +165,19 @@ const Poker = () => {
       </div>
     </div>
   );
-};
 
-function bets(i) {
-  return <p className="bets" id={`bet${i}`}></p>;
-}
-function seats(i) {
-  return <span id={`seat${i}`}></span>;
-}
-function moneys(i) {
-  return (
-    <div id={`money${i}`} className="moneys">
-      <p className="moneyNum"></p>
-    </div>
-  );
-}
+  function bets(i) {
+    return <p className="bets" id={`bet${i}`}></p>;
+  }
+  function seats(i) {
+    return <span id={`seat${i}`}>{roomData.sockData.players[i-1].name}</span>;
+  }
+  function moneys(i) {
+    return (
+      <div id={`money${i}`} className="moneys">
+        <p className="moneyNum"></p>
+      </div>
+    );
+  }
+};
 export default Poker;
