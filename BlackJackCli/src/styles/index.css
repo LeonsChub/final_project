@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=Big+Shoulders+Display&family=Denk+One&family=Ewert&family=Goldman&family=Graduate&family=Londrina+Outline&family=Metal+Mania&family=Monoton&family=Orbitron&family=Pacifico&family=Poppins:wght@100;400&family=Rock+Salt&family=Rubik+80s+Fade&family=Rubik+Vinyl&family=Russo+One&family=Teko:wght@600&display=swap");
+
+ @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Big+Shoulders+Display&family=Denk+One&family=Ewert&family=Goldman&family=Graduate&family=Londrina+Outline&family=Metal+Mania&family=Monoton&family=Orbitron&family=Pacifico&family=Poppins:wght@100;400&family=Righteous&family=Rock+Salt&family=Rubik+80s+Fade&family=Rubik+Vinyl&family=Russo+One&family=Teko:wght@600&display=swap');
 * {
   margin: 0 !important;
 }
@@ -77,24 +78,27 @@
   justify-content: space-around;
 }
 .welcomeHeaderSpace {
-  width: 100%;
-  height: 30%;
+  width: 90%;
+  height: 50%;
   display: flex;
   justify-content: center;
 }
 .welcomeHeader {
   width: 100%;
-  height: 100%;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
 }
 #welcomeHeader {
+  height: 40%;
+  width: 30%;
   font-size: 350%;
   font-family: "Teko", sans-serif;
   color: #b89105;
-  border-radius: 50px;
   text-shadow: 5px 5px 5px rgb(93, 12, 48);
-  height: 100%;
-  margin-left: 2%;
-  margin-top: 2%;
+  border-radius: 10px;
 }
 .welcomeBtnSpace {
   width: 100%;

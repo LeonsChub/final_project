@@ -69,8 +69,8 @@ const Poker = () => {
             <MySlider
               value={value}
               setValue={setValue}
-              myChips={22}
-              currentBet={12}
+              myChips={5000}
+              currentBet={currentBet}
             />
           </div>
           <button
@@ -109,8 +109,11 @@ const Poker = () => {
             });
           }}
         >
-          Casino menu
+          Leave game
         </button>
+        <div>
+          <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
+        </div>
       </div>
       <div className="blindSpace">
         <p id="blind">Blind: {roomData.gameState.blind}</p>
@@ -130,6 +133,7 @@ const Poker = () => {
         })}
       </div>
       <div className="pokerTable">
+        <span id="dealerSeat">Dealer</span>;
         {roomData.sockData.players.map((p, index) => {
           return seats(index + 1);
         })}
@@ -224,5 +228,6 @@ function moneys(i) {
     </div>
   );
 }
+
 
 export default Poker;
