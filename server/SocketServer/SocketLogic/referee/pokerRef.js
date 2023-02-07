@@ -24,6 +24,20 @@ const pokerRef = (socket, io, roomId) => {
   function addToPot(amount) {
     gameState.pot += amount;
   }
+
+  function determineFirst() {
+    const { sbIndex, bbIndex } = gameState.roundInfo;
+    if (gameState.players.length === 2) {
+      return gameState.players[sbIndex]["id"];
+    } else {
+      if (bbIndex + 1 >= gameState.players.length) {
+        return gameState.players[0]["id"];
+      } else {
+        return gameState.players[bbIndex + 1]["id"];
+      }
+    }
+  }
+
   const gameState = {
     deck: shuffleDeck(initDeck()),
     players: generatePlayerData(roomId),
@@ -36,23 +50,30 @@ const pokerRef = (socket, io, roomId) => {
     pot: 0,
     blind: 20,
     gameStage: "preflop",
+    activePlayer: "",
   };
 
-  io.to(roomId).emit("ref ready", gameState);
+  let gaveCards = false;
 
   //determine blinds
   const { sbIndex, bbIndex } = gameState.roundInfo;
-  // addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
-  // addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
   //hand cards to each player
-  gameState.players.forEach((player) => {
-    const hand = [];
-    hand.push(gameState.deck.pop()); // pop first to players and append them to an array
-    hand.push(gameState.deck.pop());
+  socket.on("init round", () => {
+    if (!gaveCards) {
+      gameState.players.forEach((player) => {
+        const hand = [];
+        hand.push(gameState.deck.pop()); // pop first to players and append them to an array
+        hand.push(gameState.deck.pop());
 
-    updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
+        updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
+      });
+
+      addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+      addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+      gameState.activePlayer = determineFirst();
+      io.to(roomId).emit("handing cards", gameState); // update
+    }
   });
-  io.to(roomId).emit("handing cards", gameState); // update
 };
 
 // --------------------------------Helper functions

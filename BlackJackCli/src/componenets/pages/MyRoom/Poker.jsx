@@ -8,20 +8,6 @@ import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
 import jwt from "jwt-decode";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
-const renderTime = ({ remainingTime }) => {
-  if (remainingTime === 0) {
-    return <div className="timer">Too late...</div>;
-  }
-
-  return (
-    <div className="timer">
-      <div className="text">Remaining</div>
-      <div className="value">{remainingTime}</div>
-      <div className="text">seconds</div>
-    </div>
-  );
-};
-
 const Poker = () => {
   const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const socket = useContext(SocketContext);
@@ -29,6 +15,7 @@ const Poker = () => {
   const { user_id } = jwt(token);
 
   const mountRef = useRef(false);
+  const gotCardsRef = useRef(false);
 
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
@@ -37,16 +24,6 @@ const Poker = () => {
   const [timer, setTimer] = useState(false);
   const [bet, setBet] = useState(roomData.gameState.blind);
   const [currentBet, setCurrentBet] = useState(0);
-  // const {
-  //   path,
-  //   pathLength,
-  //   stroke,
-  //   strokeDashoffset,
-  //   remainingTime,
-  //   elapsedTime,
-  //   size,
-  //   strokeWidth,
-  // } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
 
   useEffect(() => {
     initListeners();
@@ -77,6 +54,8 @@ const Poker = () => {
     setRaise(!raise);
   };
   const startingGame = () => {
+    setGameStarted(true);
+    handCardsAnimation();
     socket.emit("start game", {
       auth: token,
       roomId: roomData.sockData.roomId,
@@ -114,7 +93,7 @@ const Poker = () => {
         <></>
       )}
       <div className="timerSpace">
-        {renderTimer()}
+        {roomData.gameState.activePlayer === user_id ? renderTimer() : "null"}
 
         <div className="timer-wrapper"></div>
       </div>
@@ -154,13 +133,26 @@ const Poker = () => {
         <p id="blind">Blind: {roomData.gameState.blind}</p>
       </div>
       <div className="pokerBtns">
-        <button id="raise" onClick={() => setRaise(!raise)}>
+        <button
+          id="raise"
+          onClick={() => setRaise(!raise)}
+          disabled={user_id !== roomData.gameState.activePlayer}
+        >
           Raise
         </button>
-        <button onClick={() => setTimer(!timer)} id="call">
+        <button
+          onClick={() => setTimer(!timer)}
+          id="call"
+          disabled={user_id !== roomData.gameState.activePlayer}
+        >
           Call
         </button>
-        <button id="fold">Fold</button>
+        <button
+          id="fold"
+          disabled={user_id !== roomData.gameState.activePlayer}
+        >
+          Fold
+        </button>
       </div>
       <div>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
@@ -193,7 +185,11 @@ const Poker = () => {
   function seats(i) {
     const player = reorderCenter(roomData.sockData.players)[i - 1];
 
-    return <span id={`seat${i}`}>{player ? player.name : ""}</span>;
+    return (
+      <span id={`seat${i}`} style={{ color: "white" }}>
+        {player ? player.name : ""}
+      </span>
+    );
   }
   function moneys(i) {
     return (
@@ -204,6 +200,7 @@ const Poker = () => {
   }
   function initListeners() {
     socket.on("handing cards", (data) => {
+      console.log("Getting cards from server");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -242,15 +239,6 @@ const Poker = () => {
       });
     });
 
-    socket.on("ref ready", (data) => {
-      console.log(data);
-      setRoomData((prev) => {
-        const oldState = { ...prev };
-        oldState.gameState = data;
-        return oldState;
-      });
-    });
-
     window.addEventListener("beforeunload", function (e) {
       e.preventDefault();
       e.returnValue = "";
@@ -271,7 +259,9 @@ const Poker = () => {
         duration={20}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[20, 15, 8, 0]}
-        onComplete={() => [true, 1000]}
+        onComplete={() => {
+          alert("BABA GANUSH");
+        }}
       >
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
@@ -290,6 +280,20 @@ const Poker = () => {
     });
 
     return reordered;
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+  async function handCardsAnimation() {
+    if (!gotCardsRef.current) {
+      console.log("handing cards animation");
+      await sleep(1500);
+      console.log("finished handing cards getting data from server");
+      socket.emit("init round");
+    }
   }
 };
 export default Poker;
