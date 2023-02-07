@@ -52,7 +52,6 @@ const pokerRef = (socket, io, roomId) => {
 
     updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
   });
-  console.log(`Emitting ${JSON.stringify(gameState)}`);
   io.to(roomId).emit("handing cards", gameState); // update
 };
 

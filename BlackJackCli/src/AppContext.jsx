@@ -32,14 +32,20 @@ function AppContext({ children }) {
       pot: 0,
       blind: 0,
       gameStage: "",
-    }  });
+    },
+  });
 
-  function updateGameState() {
-    setRoomData((prev) => {
-      const oldState = { ...prev };
-      oldState.gameState = newState;
-      return oldState;
-    });
+  function blankGameState() {
+    return {
+      deck: [],
+      players: [],
+      community: [],
+      burned: [],
+      roundInfo: {},
+      pot: 0,
+      blind: 0,
+      gameStage: "",
+    };
   }
 
   const gamesRef = useRef(null);
@@ -62,21 +68,18 @@ function AppContext({ children }) {
   return (
     <SocketContext.Provider value={socket}>
       <TokenContext.Provider value={[token, setToken]}>
-        <RoomContext.Provider
-          value={[roomData, setRoomData, getRoomId, updateGameState]}
-        >
+        <RoomContext.Provider value={[roomData, setRoomData, blankGameState]}>
           <ScrollersContext.Provider
-      value={{
-        gamesRef,
-        gamesClick,
-        profileRef,
-        profileClick,
-        aboutRef,
-        aboutClick,
-      }}
-    >
-          
-          {children}
+            value={{
+              gamesRef,
+              gamesClick,
+              profileRef,
+              profileClick,
+              aboutRef,
+              aboutClick,
+            }}
+          >
+            {children}
           </ScrollersContext.Provider>
         </RoomContext.Provider>
       </TokenContext.Provider>
