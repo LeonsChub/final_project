@@ -58,7 +58,7 @@ function PlayRoom() {
 
         setRoomData((prev) => {
           const oldState = { ...prev };
-          oldState.gameState = undefined;
+          // oldState.gameState = undefined;
           return oldState;
         });
       }
@@ -108,7 +108,7 @@ function PlayRoom() {
         onClick={() => {
           setRoomData((prev) => {
             const oldState = { ...prev };
-            oldState.gameState = undefined;
+            // oldState.gameState = undefined;
             return oldState;
           });
           socket.emit("leave room", { auth: token });
