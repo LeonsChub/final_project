@@ -159,16 +159,16 @@ const Poker = () => {
         <button id="fold">Fold</button>
       </div>
       <div>
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return bets(index + 1);
         })}
       </div>
       <div className="pokerTable">
         <span id="dealerSeat">Dealer</span>;
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return seats(index + 1);
         })}
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return moneys(index + 1);
         })}
         <div className="package"></div>
@@ -187,7 +187,9 @@ const Poker = () => {
     return <p className="bets" id={`bet${i}`}></p>;
   }
   function seats(i) {
-    return <span id={`seat${i}`}>{roomData.sockData.players[i - 1].name}</span>;
+    const player = reorderCenter(roomData.sockData.players)[i - 1];
+
+    return <span id={`seat${i}`}>{player ? player.name : ""}</span>;
   }
   function moneys(i) {
     return (
@@ -270,6 +272,23 @@ const Poker = () => {
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
     );
+  }
+  function reorderCenter(players) {
+    const reordered = new Array(7);
+    const pIndex = players.findIndex((p) => {
+      return p.id === user_id;
+    });
+    console.log(reordered);
+
+    console.log(pIndex);
+
+    players.forEach((p, index) => {
+      const newIndex =
+        index - pIndex >= 0 ? index - pIndex : 7 + (index - pIndex);
+      reordered[newIndex] = p;
+    });
+
+    return reordered;
   }
 };
 export default Poker;
