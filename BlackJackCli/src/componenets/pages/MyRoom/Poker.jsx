@@ -77,11 +77,10 @@ const Poker = () => {
     setRaise(!raise);
   };
   const startingGame = () => {
-    setGameStarted(true);
-    // socket.emit("start game", {
-    //   auth: token,
-    //   roomId: roomData.sockData.roomId,
-    // });
+    socket.emit("start game", {
+      auth: token,
+      roomId: roomData.sockData.roomId,
+    });
   };
   return (
     <div className="pokerSpace">
@@ -138,11 +137,16 @@ const Poker = () => {
         <div>
           <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
         </div>
-        {gameStarted ? (
+        {gameStarted || user_id !== roomData.sockData.hostId ? (
           <></>
         ) : (
           <div>
-            <button onClick={(e) => startingGame(e)}>Start game</button>
+            <button
+              onClick={(e) => startingGame(e)}
+              disabled={roomData.sockData.players.length < 2}
+            >
+              Start game {roomData.sockData.players.length}/2
+            </button>
           </div>
         )}
       </div>
@@ -159,16 +163,16 @@ const Poker = () => {
         <button id="fold">Fold</button>
       </div>
       <div>
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return bets(index + 1);
         })}
       </div>
       <div className="pokerTable">
         <span id="dealerSeat">Dealer</span>;
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return seats(index + 1);
         })}
-        {roomData.sockData.players.map((p, index) => {
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
           return moneys(index + 1);
         })}
         <div className="package"></div>
@@ -187,7 +191,9 @@ const Poker = () => {
     return <p className="bets" id={`bet${i}`}></p>;
   }
   function seats(i) {
-    return <span id={`seat${i}`}>{roomData.sockData.players[i - 1].name}</span>;
+    const player = reorderCenter(roomData.sockData.players)[i - 1];
+
+    return <span id={`seat${i}`}>{player ? player.name : ""}</span>;
   }
   function moneys(i) {
     return (
@@ -198,7 +204,6 @@ const Poker = () => {
   }
   function initListeners() {
     socket.on("handing cards", (data) => {
-      console.log("get hand");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -238,6 +243,7 @@ const Poker = () => {
     });
 
     socket.on("ref ready", (data) => {
+      console.log(data);
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -270,6 +276,20 @@ const Poker = () => {
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
     );
+  }
+  function reorderCenter(players) {
+    const reordered = new Array(7);
+    const pIndex = players.findIndex((p) => {
+      return p.id === user_id;
+    });
+
+    players.forEach((p, index) => {
+      const newIndex =
+        index - pIndex >= 0 ? index - pIndex : 7 + (index - pIndex);
+      reordered[newIndex] = p;
+    });
+
+    return reordered;
   }
 };
 export default Poker;
