@@ -1,12 +1,26 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import MySlider from "./TableComps/Slider";
 import "./style/poker.css";
-import Timer from "./TableComps/Timer";
 import { useCountdown } from "react-countdown-circle-timer";
 import { useNavigate } from "react-router-dom";
 import Slider from "rc-slider";
 import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
 import jwt from "jwt-decode";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+
+const renderTime = ({ remainingTime }) => {
+  if (remainingTime === 0) {
+    return <div className="timer">Too late...</div>;
+  }
+
+  return (
+    <div className="timer">
+      <div className="text">Remaining</div>
+      <div className="value">{remainingTime}</div>
+      <div className="text">seconds</div>
+    </div>
+  );
+};
 
 const Poker = () => {
   const [roomData, setRoomData] = useContext(RoomContext);
@@ -17,21 +31,24 @@ const Poker = () => {
   const mountRef = useRef(false);
 
   const navigate = useNavigate();
+  const [gameStarted, setGameStarted] = useState(false);
   const [raise, setRaise] = useState(false);
   const [value, setValue] = useState(0);
   const [timer, setTimer] = useState(false);
   const [bet, setBet] = useState(roomData.gameState.blind);
   const [currentBet, setCurrentBet] = useState(0);
-  const {
-    path,
-    pathLength,
-    stroke,
-    strokeDashoffset,
-    remainingTime,
-    elapsedTime,
-    size,
-    strokeWidth,
-  } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
+  // const {
+  //   path,
+  //   pathLength,
+  //   stroke,
+  //   strokeDashoffset,
+  //   remainingTime,
+  //   elapsedTime,
+  //   size,
+  //   strokeWidth,
+  // } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
+
+  
 
   useEffect(() => {
     socket.on("handing cards", (data) => {
@@ -75,6 +92,13 @@ const Poker = () => {
     setBet(value);
     setRaise(!raise);
   };
+  const startingGame = () => {
+    setGameStarted(true);
+    // socket.emit("start game", {
+    //   auth: token,
+    //   roomId: roomData.sockData.roomId,
+    // });
+  };
   return (
     <div className="pokerSpace">
       {raise ? (
@@ -107,7 +131,11 @@ const Poker = () => {
         <></>
       )}
       <div className="timerSpace">
-        <Timer timer={timer} />
+        {renderTimer()}
+        
+         <div className="timer-wrapper">
+         
+      </div>
       </div>
       <div className="leftSide">
         <button
@@ -127,6 +155,13 @@ const Poker = () => {
         <div>
           <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
         </div>
+        {gameStarted ? (
+          <></>
+        ) : (
+          <div>
+            <button onClick={(e) => startingGame(e)}>Start game</button>
+          </div>
+        )}
       </div>
       <div className="blindSpace">
         <p id="blind">Blind: {roomData.gameState.blind}</p>
@@ -170,7 +205,7 @@ const Poker = () => {
     return <p className="bets" id={`bet${i}`}></p>;
   }
   function seats(i) {
-    return <span id={`seat${i}`}>{roomData.sockData.players[i-1].name}</span>;
+    return <span id={`seat${i}`}>{roomData.sockData.players[i - 1].name}</span>;
   }
   function moneys(i) {
     return (
@@ -179,5 +214,23 @@ const Poker = () => {
       </div>
     );
   }
+
+  function renderTimer(){
+    return (
+    
+      <CountdownCircleTimer
+              isPlaying ={gameStarted}
+              duration={20}
+              colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+              colorsTime={[20, 15, 8, 0]}
+              onComplete={() => [true, 1000]}
+      >
+        {({ remainingTime }) => remainingTime}
+      </CountdownCircleTimer>
+    );
+  } 
+    
 };
+
+
 export default Poker;
