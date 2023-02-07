@@ -42,8 +42,8 @@ const pokerRef = (socket, io, roomId) => {
 
   //determine blinds
   const { sbIndex, bbIndex } = gameState.roundInfo;
-  addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
-  addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+  // addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+  // addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
   //hand cards to each player
   gameState.players.forEach((player) => {
     const hand = [];
