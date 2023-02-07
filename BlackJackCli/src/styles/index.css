@@ -1,5 +1,4 @@
-
- @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Big+Shoulders+Display&family=Denk+One&family=Ewert&family=Goldman&family=Graduate&family=Londrina+Outline&family=Metal+Mania&family=Monoton&family=Orbitron&family=Pacifico&family=Poppins:wght@100;400&family=Righteous&family=Rock+Salt&family=Rubik+80s+Fade&family=Rubik+Vinyl&family=Russo+One&family=Teko:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&family=Big+Shoulders+Display&family=Denk+One&family=Ewert&family=Goldman&family=Graduate&family=Londrina+Outline&family=Metal+Mania&family=Monoton&family=Orbitron&family=Pacifico&family=Poppins:wght@100;400&family=Righteous&family=Rock+Salt&family=Rubik+80s+Fade&family=Rubik+Vinyl&family=Russo+One&family=Teko:wght@600&display=swap");
 * {
   margin: 0 !important;
 }
@@ -263,12 +262,111 @@
   height: 50%;
   width: 100%;
 }
+.dropDowns {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 99%;
+  height: 20%;
+}
+.gameDrop {
+  position: relative;
+  top: 15%;
+  color: #ece8e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 20%;
+  font-size: 150%;
+  cursor: pointer;
+  gap: 10%;
+  position: absolute;
+  top: 40%;
+	-webkit-animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+	        animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+}
+ @-webkit-keyframes slide-in-blurred-bottom {
+  0% {
+    -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-blurred-bottom {
+  0% {
+    -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
+}
+
+.play {
+  border: 3px solid green;
+  width: 60%;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-family: "Righteous", cursive;
+}
+.play:hover {
+  background-color: green;
+}
+.rules {
+  border: 3px solid rgb(128, 0, 92);
+  width: 60%;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-family: "Righteous", cursive;
+
+}
+.rules:hover {
+  background-color: rgb(128, 0, 92);
+}
+.dropOpen{
+  display: static;
+}
+.dropClosed{
+  display: none;
+}
 .card {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 40%;
-  width: 22%;
+  width: 25%;
   border: 5px solid rgb(0, 0, 0);
   border-radius: 10px;
   background: rgb(190, 39, 39);
