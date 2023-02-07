@@ -48,8 +48,6 @@ const Poker = () => {
   //   strokeWidth,
   // } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
 
-  
-
   useEffect(() => {
     initListeners();
 
@@ -118,10 +116,8 @@ const Poker = () => {
       )}
       <div className="timerSpace">
         {renderTimer()}
-        
-         <div className="timer-wrapper">
-         
-      </div>
+
+        <div className="timer-wrapper"></div>
       </div>
       <div className="leftSide">
         <button
@@ -187,16 +183,6 @@ const Poker = () => {
       </div>
     </div>
   );
-  function initListeners() {
-    socket.on("handing cards", (data) => {
-      console.log("get hand");
-      setRoomData((prev) => {
-        const oldState = { ...prev };
-        oldState.gameState = data;
-        return oldState;
-      });
-    });
-
   function bets(i) {
     return <p className="bets" id={`bet${i}`}></p>;
   }
@@ -209,6 +195,16 @@ const Poker = () => {
         <p className="moneyNum"></p>
       </div>
     );
+  }
+  function initListeners() {
+    socket.on("handing cards", (data) => {
+      console.log("get hand");
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        return oldState;
+      });
+    });
 
     socket.on("update gamestate", (data) => {
       setRoomData((prev) => {
@@ -260,24 +256,20 @@ const Poker = () => {
         auth: token,
       });
     });
-
   }
 
-  function renderTimer(){
+  function renderTimer() {
     return (
-    
       <CountdownCircleTimer
-              isPlaying ={gameStarted}
-              duration={20}
-              colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-              colorsTime={[20, 15, 8, 0]}
-              onComplete={() => [true, 1000]}
+        isPlaying={gameStarted}
+        duration={20}
+        colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+        colorsTime={[20, 15, 8, 0]}
+        onComplete={() => [true, 1000]}
       >
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
     );
-  } 
-    
+  }
 };
-
 export default Poker;
