@@ -34,7 +34,7 @@
   position: relative;
   /* left: 350%; */
   font-size: 150%;
-  font-family: 'Righteous', cursive;
+  font-family: "Righteous", cursive;
 }
 .tableCenter {
   display: flex;
@@ -52,6 +52,9 @@
   border-radius: 8px;
   position: relative;
   bottom: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #flopPlace {
   border: 3px solid rgb(48, 46, 46);
@@ -287,7 +290,7 @@
   color: rgb(207, 0, 114);
   background-color: transparent;
   border: 3px solid rgb(207, 0, 114);
-  font-family: 'Righteous', cursive;
+  font-family: "Righteous", cursive;
 }
 #exitGame:hover {
   background-color: rgb(207, 0, 114);
@@ -436,4 +439,87 @@
   justify-content: center;
   font-size: 150%;
   font-family: "Graduate", cursive;
+}
+.myPack {
+  display: flex;
+  position: absolute;
+}
+.myPlayingCard1 {
+  top: 20%;
+  background-color: white;
+  border: 1px solid black;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+}
+.myPlayingCard2 {
+  top: 20%;
+  background-color: white;
+  border: 1px solid black;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.player2Card1 {
+  top: 20%;
+}
+.c2-1{
+  transform: rotate(-45deg);
+
+}
+.player2Card2 {
+  top: 20%;
+  transform: rotate(-45deg);
+}
+.player3Card1 {
+  top: 20%;
+  transform: rotate(-90deg);
+}
+.player3Card2 {
+  top: 20%;
+  transform: rotate(-90deg);
+}
+.player4Card1 {
+  top: 20%;
+  transform: rotate(45deg);
+}
+.player4Card2 {
+  top: 20%;
+  transform: rotate(45deg);
+}
+.player5Card1 {
+  top: 20%;
+  transform: rotate(135deg);
+}
+.player5Card2 {
+  top: 20%;
+  transform: rotate(135deg);
+}
+.player6Card1 {
+  top: 20%;
+  transform: rotate(90deg);
+}
+.player6Card2 {
+  top: 20%;
+  transform: rotate(90deg);
+}
+.player7Card1 {
+  top: 20%;
+  transform: rotate(45deg);
+}
+.player7Card2 {
+  top: 20%;
+  transform: rotate(45deg);
+}
+#packageImg {
+  height: 90%;
+  width: 90%;
+  border: 2px solid black;
+  border-radius: 10%;
+  z-index: 999;
 }

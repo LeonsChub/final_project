@@ -3,24 +3,29 @@ import spadeImg from "../../images/spade.png";
 import heartImg from "../../images/heart.png";
 import diamondImg from "../../images/diamond.png";
 import clubImg from "../../images/club.png";
+import packageImg from "../../images/deck.webp";
 
 const Card = ({ suit, value }) => {
   function renderSuite() {
     switch (suit) {
       case "spades":
         return <img style={{ width: "30px" }} src={spadeImg} alt="" />;
-        break;
 
       case "hearts":
         return <img style={{ width: "30px" }} src={heartImg} alt="" />;
-        break;
 
       case "diamonds":
-        return <img style={{ width: "30px" }} src={diamondImg} alt="" />;
-        break;
+        return <img style={{ width: "10px" }} src={diamondImg} alt="" />;
       case "clubs":
         return <img style={{ width: "30px" }} src={clubImg} alt="" />;
-        break;
+      case "back":
+        return (
+          <img
+            style={{ width: "30px", height: "40px" }}
+            src={packageImg}
+            alt=""
+          />
+        );
 
       default:
         break;
@@ -29,14 +34,14 @@ const Card = ({ suit, value }) => {
   return (
     <div
       style={{
-        width: "100px",
-        height: "150px",
-        backgroundColor: "white",
-        border: "1px solid black",
+        width: "100%",
+        height: "100%",
+        // backgroundColor: "white",
+        // border: "1px solid black",
         textAlign: "center",
-        display: "inline-block",
-        marginRight: "10px",
-        paddingTop: "20px",
+        display: "flex",
+        flexDirection:'column',
+        zIndex: "999",
       }}
     >
       <div
