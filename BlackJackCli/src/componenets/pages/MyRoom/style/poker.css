@@ -283,12 +283,9 @@
 #exitGame {
   height: 90%;
   width: 50%;
-  border-radius: 5%;
-  border: none;
   font-size: 200%;
   cursor: pointer;
   color: rgb(207, 0, 114);
-  background-color: transparent;
   border: 3px solid rgb(207, 0, 114);
   font-family: "Righteous", cursive;
 }

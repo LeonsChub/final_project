@@ -8,6 +8,8 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Card from "./../../Card";
 import packageImg from "../../../../images/deck.webp";
 import gsap from "gsap";
+import Chips from "../../Chips";
+import './../../../styles/btns.css'
 
 const renderTime = ({ remainingTime }) => {
   if (remainingTime === 0) {
@@ -165,8 +167,8 @@ const Poker = () => {
         <div className="timer-wrapper"></div>
       </div>
       <div className="leftSide">
-        <button
-          id="exitGame"
+      <button id="exitGame" class="custom-btn btn-8">Read More</button>
+        {/* <button
           onClick={() => {
             navigate("/");
             socket.emit("leave room");
@@ -179,7 +181,7 @@ const Poker = () => {
           }}
         >
           Leave game
-        </button>
+        </button> */}
         <div>
           <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
         </div>
@@ -208,7 +210,8 @@ const Poker = () => {
         </button>
         <button id="fold">Fold</button>
       </div>
-      <div>
+      <div className="betNChips">
+        <Chips value={2000}/>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
           return bets(index + 1);
         })}

@@ -52,7 +52,7 @@ function App() {
         <Route path="/main" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/room browser" element={<Rooms />} />
-        <Route path="/chips" element={<Chips />} />
+        {/* <Route path="/chips" element={<Chips />} /> */}
         {/* <Route path="/signup" element={<Signup />} /> */}
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/poker" element={<Poker />} />
