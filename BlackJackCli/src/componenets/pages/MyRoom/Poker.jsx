@@ -167,8 +167,7 @@ const Poker = () => {
         <div className="timer-wrapper"></div>
       </div>
       <div className="leftSide">
-      <button id="exitGame" class="custom-btn btn-8">Read More</button>
-        {/* <button
+        <button
           onClick={() => {
             navigate("/");
             socket.emit("leave room");
@@ -181,7 +180,7 @@ const Poker = () => {
           }}
         >
           Leave game
-        </button> */}
+        </button>
         <div>
           <h3 id="roomName">Room: {roomData.sockData.roomName}</h3>
         </div>
