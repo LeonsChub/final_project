@@ -284,46 +284,47 @@
   gap: 10%;
   position: absolute;
   top: 40%;
-	-webkit-animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
-	        animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+  -webkit-animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.23, 1, 0.32, 1)
+    both;
+  animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
- @-webkit-keyframes slide-in-blurred-bottom {
+@-webkit-keyframes slide-in-blurred-bottom {
   0% {
     -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
-            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
     -webkit-transform-origin: 50% 100%;
-            transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
     -webkit-filter: blur(40px);
-            filter: blur(40px);
+    filter: blur(40px);
     opacity: 0;
   }
   100% {
     -webkit-transform: translateY(0) scaleY(1) scaleX(1);
-            transform: translateY(0) scaleY(1) scaleX(1);
+    transform: translateY(0) scaleY(1) scaleX(1);
     -webkit-transform-origin: 50% 50%;
-            transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
     -webkit-filter: blur(0);
-            filter: blur(0);
+    filter: blur(0);
     opacity: 1;
   }
 }
 @keyframes slide-in-blurred-bottom {
   0% {
     -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
-            transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+    transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
     -webkit-transform-origin: 50% 100%;
-            transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
     -webkit-filter: blur(40px);
-            filter: blur(40px);
+    filter: blur(40px);
     opacity: 0;
   }
   100% {
     -webkit-transform: translateY(0) scaleY(1) scaleX(1);
-            transform: translateY(0) scaleY(1) scaleX(1);
+    transform: translateY(0) scaleY(1) scaleX(1);
     -webkit-transform-origin: 50% 50%;
-            transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
     -webkit-filter: blur(0);
-            filter: blur(0);
+    filter: blur(0);
     opacity: 1;
   }
 }
@@ -350,15 +351,14 @@
   align-items: center;
   border-radius: 10px;
   font-family: "Righteous", cursive;
-
 }
 .rules:hover {
   background-color: rgb(128, 0, 92);
 }
-.dropOpen{
+.dropOpen {
   display: static;
 }
-.dropClosed{
+.dropClosed {
   display: none;
 }
 .card {
@@ -613,4 +613,106 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+/* === CHIPS === */
+.chipsCollection {
+  height: 50%;
+  width: 50%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* gap: %; */
+  z-index: -1;
+}
+.cont {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+}
+.whites {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  z-index: -1;
+}
+.white {
+  height: 10%;
+  width: 10%;
+  background-color: #242424;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  position: absolute;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+}
+.inWhite {
+  height: 80%;
+  width: 75%;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  /* position: absolute; */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inBlue {
+  height: 80%;
+  width: 75%;
+  background-color: #00389f;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  /* position: absolute; */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inGreen {
+  height: 80%;
+  width: 75%;
+  background-color: #00862d;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  /* position: absolute; */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inRed {
+  height: 80%;
+  width: 75%;
+  background-color: #ba2b2b;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  /* position: absolute; */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inBlack {
+  height: 80%;
+  width: 75%;
+  background-color: #000000;
+  border-radius: 50%;
+  transform: rotate(3deg);
+  /* position: absolute; */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
