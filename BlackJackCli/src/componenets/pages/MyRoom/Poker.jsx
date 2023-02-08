@@ -20,8 +20,7 @@ const Poker = () => {
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
   const [raise, setRaise] = useState(false);
-  const [value, setValue] = useState(0);
-  const [timer, setTimer] = useState(false);
+  const [raiseBet, setRaiseBet] = useState(undefined);
   const [bet, setBet] = useState(roomData.gameState.blind);
   const [currentBet, setCurrentBet] = useState(0);
 
@@ -48,10 +47,14 @@ const Poker = () => {
     };
   }, []);
 
-  const handleBet = async () => {
-    setCurrentBet(value);
-    setBet(value);
+  const confirmRaise = () => {
     setRaise(!raise);
+    if (raiseBet) {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "raise", amount: raiseBet },
+      });
+    }
   };
   const startingGame = () => {
     setGameStarted(true);
@@ -67,35 +70,35 @@ const Poker = () => {
         <div>
           <div className="sliderSpace sliderWithValues1">
             <MySlider
-              value={value}
-              setValue={setValue}
-              myChips={5000}
-              currentBet={currentBet}
+              value={raiseBet}
+              setValue={setRaiseBet}
+              myChips={getPlayerChips(user_id)}
+              currentBet={roomData.gameState.roundInfo.minBet}
             />
           </div>
           <button
             className="sliderWithValues"
             id="allInBtn"
-            onClick={() => setValue(22)}
+            onClick={() => setRaiseBet(getPlayerChips(user_id))}
           >
             ALL IN
           </button>
           <button
             className="sliderWithValues"
-            onClick={() => handleBet()}
+            onClick={() => confirmRaise()}
             id="confirmBtn"
           >
             Confirm
           </button>
-          <p id="sliderValue">{value}</p>
+          <p id="sliderValue">{raiseBet}</p>
         </div>
       ) : (
         <></>
       )}
       <div className="timerSpace">
-        {roomData.gameState.activePlayer === user_id ? renderTimer() : "null"}
-
-        <div className="timer-wrapper"></div>
+        {roomData.gameState.roundInfo.activePlayer === user_id
+          ? renderTimer()
+          : undefined}
       </div>
       <div className="leftSide">
         <button
@@ -132,31 +135,32 @@ const Poker = () => {
       <div className="blindSpace">
         <p id="blind">Blind: {roomData.gameState.blind}</p>
       </div>
-      <div className="pokerBtns">
-        <button
-          id="raise"
-          onClick={() => setRaise(!raise)}
-          disabled={user_id !== roomData.gameState.activePlayer}
-        >
-          Raise
-        </button>
-        <button
-          onClick={() => setTimer(!timer)}
-          id="call"
-          disabled={user_id !== roomData.gameState.activePlayer}
-        >
-          Call
-        </button>
-        <button
-          id="fold"
-          disabled={user_id !== roomData.gameState.activePlayer}
-        >
-          Fold
-        </button>
-      </div>
+      {user_id === roomData.gameState.roundInfo.activePlayer ? (
+        <div className="pokerBtns">
+          <button id="raise" onClick={() => setRaise(!raise)}>
+            Raise
+          </button>
+          <button
+            id="call"
+            onClick={() =>
+              socket.emit("bet placed", { auth: token, bet: { type: "call" } })
+            }
+          >
+            Call
+          </button>
+          <button
+            id="fold"
+            onClick={() =>
+              socket.emit("bet placed", { auth: token, bet: { type: "fold" } })
+            }
+          >
+            Fold
+          </button>
+        </div>
+      ) : undefined}
       <div>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
-          return bets(index + 1);
+          return bets(index + 1, p.id);
         })}
       </div>
       <div className="pokerTable">
@@ -165,7 +169,7 @@ const Poker = () => {
           return seats(index + 1);
         })}
         {reorderCenter(roomData.sockData.players).map((p, index) => {
-          return moneys(index + 1);
+          return moneys(index + 1, p.id);
         })}
         <div className="package"></div>
         <div className="tableCenter">
@@ -177,10 +181,25 @@ const Poker = () => {
           <div id="c5Place"></div>
         </div>
       </div>
+
+      <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
+        POT :{roomData.gameState.pot}
+      </h1>
+      <h1 style={{ position: "absolute", top: "15%", right: "5%" }}>
+        MIN BET :{roomData.gameState.minimumBet}
+      </h1>
     </div>
   );
-  function bets(i) {
-    return <p className="bets" id={`bet${i}`}></p>;
+  function bets(i, playerId) {
+    let playerBet = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    playerBet = playerBet ? playerBet["stake"] : "";
+    return (
+      <p className="bets" id={`bet${i}`}>
+        {playerBet}
+      </p>
+    );
   }
   function seats(i) {
     const player = reorderCenter(roomData.sockData.players)[i - 1];
@@ -191,10 +210,10 @@ const Poker = () => {
       </span>
     );
   }
-  function moneys(i) {
+  function moneys(i, playerId) {
     return (
       <div id={`money${i}`} className="moneys">
-        <p className="moneyNum"></p>
+        <p className="moneyNum">{getPlayerChips(playerId)}</p>
       </div>
     );
   }
@@ -252,15 +271,24 @@ const Poker = () => {
     });
   }
 
+  function getPlayerChips(playerId) {
+    let playerChips = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    playerChips = playerChips ? playerChips["chips"] : "";
+
+    return playerChips;
+  }
+
   function renderTimer() {
     return (
       <CountdownCircleTimer
-        isPlaying={gameStarted}
+        isPlaying={true}
         duration={20}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[20, 15, 8, 0]}
         onComplete={() => {
-          alert("BABA GANUSH");
+          socket.emit("player done", { playerId: user_id });
         }}
       >
         {({ remainingTime }) => remainingTime}

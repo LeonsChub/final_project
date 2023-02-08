@@ -35,6 +35,18 @@ class Player {
 
     return blind;
   }
+  setFold() {
+    this.fold = true;
+  }
+  callBet(minimumBet) {
+    console.log(`min bet ${minimumBet} VS stake ${this.stake}`);
+    if (minimumBet !== undefined && this.stake) {
+      const gap = minimumBet - this.stake;
+      this.stake = minimumBet;
+      this.chips = this.chips - gap;
+      return gap;
+    }
+  }
 }
 
 module.exports = Player;

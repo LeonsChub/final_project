@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+const config = process.env;
 const {
   createRoom,
   addRoom,
@@ -9,9 +11,7 @@ const {
   deleteRoom,
   getRoomHost,
 } = require("../../roomManager/rooms");
-
 const Player = require("./player/player");
-
 const pokerRef = (socket, io, roomId) => {
   function updatePlayerHand(to, hand) {
     const index = gameState.players.findIndex((player) => {
@@ -22,11 +22,24 @@ const pokerRef = (socket, io, roomId) => {
   }
 
   function addToPot(amount) {
+    console.log("added", amount);
     gameState.pot += amount;
   }
 
   function determineFirst() {
     const { sbIndex, bbIndex } = gameState.roundInfo;
+    if (gameState.players.length === 2) {
+      return gameState.players[sbIndex]["id"];
+    } else {
+      if (bbIndex + 1 >= gameState.players.length) {
+        return gameState.players[0]["id"];
+      } else {
+        return gameState.players[bbIndex + 1]["id"];
+      }
+    }
+  }
+  function determineNext() {
+    const { activePlayer } = gameState.roundInfo;
     if (gameState.players.length === 2) {
       return gameState.players[sbIndex]["id"];
     } else {
@@ -45,12 +58,14 @@ const pokerRef = (socket, io, roomId) => {
     burned: [],
     roundInfo: {
       sbIndex: 0, //small blind index
-      bbIndex: 1, //bbindex
+      bbIndex: 1, //big blind index
+      minBet: 20,
+      activePlayer: "",
     },
     pot: 0,
     blind: 20,
+    minimumBet: 20,
     gameStage: "preflop",
-    activePlayer: "",
   };
 
   let gaveCards = false;
@@ -62,7 +77,7 @@ const pokerRef = (socket, io, roomId) => {
     if (!gaveCards) {
       gameState.players.forEach((player) => {
         const hand = [];
-        hand.push(gameState.deck.pop()); // pop first to players and append them to an array
+        hand.push(gameState.deck.pop()); // pop cards first to players and append them to an array
         hand.push(gameState.deck.pop());
 
         updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
@@ -70,13 +85,47 @@ const pokerRef = (socket, io, roomId) => {
 
       addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
       addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
-      gameState.activePlayer = determineFirst();
+      gameState.roundInfo.activePlayer = determineFirst();
       io.to(roomId).emit("handing cards", gameState); // update
     }
   });
+
+  socket.on("bet placed", (data) => {
+    const decoded = authToken(data.auth);
+    if (decoded) {
+      const playerIndex = gameState.players.findIndex(
+        (p) => p.id === decoded.user_id
+      );
+
+      switch (data.bet.type) {
+        case "fold":
+          gameState.players[playerIndex].setFold();
+          break;
+
+        case "call":
+          addToPot(
+            gameState.players[playerIndex].callBet(gameState.minimumBet)
+          );
+
+        case "raise":
+          const { amount } = data.bet;
+          if (amount) {
+            gameState.minimumBet = amount;
+            addToPot(
+              gameState.players[playerIndex].callBet(gameState.minimumBet)
+            );
+          }
+
+        // console.log(gameState);
+        default:
+          break;
+      }
+    }
+    io.to(roomId).emit("update gamestate", gameState);
+  });
 };
 
-// --------------------------------Helper functions
+// ------------------------Helper functions------------------------------
 
 function initDeck() {
   const suits = ["clubs", "diamonds", "hearts", "spades"];
@@ -107,6 +156,16 @@ function generatePlayerData(roomId) {
     return new Player(player.name, player.id);
   });
   return players;
+}
+
+function authToken(token) {
+  try {
+    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    return decoded;
+  } catch (err) {
+    console.log("invalid token");
+  }
+  return undefined;
 }
 
 module.exports = pokerRef;
