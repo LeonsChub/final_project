@@ -38,14 +38,21 @@ class Player {
   setFold() {
     this.fold = true;
   }
-  callBet(minimumBet) {
-    console.log(`min bet ${minimumBet} VS stake ${this.stake}`);
-    if (minimumBet !== undefined && this.stake) {
-      const gap = minimumBet - this.stake;
-      this.stake = minimumBet;
-      this.chips = this.chips - gap;
-      return gap;
+  callBet() {
+    if (this.stakeGap) {
+      console.log("calling");
+      this.stake = this.stake + this.stakeGap;
+      this.chips = this.chips - this.stakeGap;
+      const toReturn = this.stakeGap;
+      this.stakeGap = 0;
+
+      return toReturn;
+    } else {
+      return 0;
     }
+  }
+  updateGap(minimumBet) {
+    this.stakeGap = minimumBet - this.stake;
   }
 }
 

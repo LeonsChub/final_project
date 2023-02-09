@@ -38,17 +38,66 @@ const pokerRef = (socket, io, roomId) => {
       }
     }
   }
-  function determineNext() {
-    const { activePlayer } = gameState.roundInfo;
-    if (gameState.players.length === 2) {
-      return gameState.players[sbIndex]["id"];
-    } else {
-      if (bbIndex + 1 >= gameState.players.length) {
-        return gameState.players[0]["id"];
-      } else {
-        return gameState.players[bbIndex + 1]["id"];
+
+  function initListeners(socket) {
+    socket.on("init round", () => {
+      if (!gaveCards) {
+        gameState.players.forEach((player) => {
+          const hand = [];
+          hand.push(gameState.deck.pop()); // pop cards first to players and append them to an array
+          hand.push(gameState.deck.pop());
+
+          updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
+        });
+
+        addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+        addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
+
+        gameState.players.forEach((player) => {
+          player.updateGap(gameState.minimumBet);
+        });
+        gameState.roundInfo.activePlayer = determineFirst();
+        io.to(roomId).emit("handing cards", gameState); // update
       }
-    }
+    });
+    socket.on("bet placed", (data) => {
+      console.log(data);
+      const decoded = authToken(data.auth);
+      console.log("ss");
+      if (decoded) {
+        console.log(data);
+        const playerIndex = gameState.players.findIndex(
+          (p) => p.id === decoded.user_id
+        );
+
+        switch (data.bet.type) {
+          case "fold":
+            gameState.players[playerIndex].setFold();
+            break;
+
+          case "call":
+            addToPot(gameState.players[playerIndex].callBet());
+
+          case "raise":
+            const { amount } = data.bet;
+            if (amount) {
+              gameState.minimumBet = amount;
+              addToPot(
+                gameState.players[playerIndex].callBet(gameState.minimumBet)
+              );
+            }
+
+          // console.log(gameState);
+          default:
+            break;
+        }
+      }
+      io.to(roomId).emit("update gamestate", gameState);
+    });
+    socket.on("leave room", () => {
+      socket.off("bet placed");
+      socket.off("init round");
+    });
   }
 
   const gameState = {
@@ -73,56 +122,10 @@ const pokerRef = (socket, io, roomId) => {
   //determine blinds
   const { sbIndex, bbIndex } = gameState.roundInfo;
   //hand cards to each player
-  socket.on("init round", () => {
-    if (!gaveCards) {
-      gameState.players.forEach((player) => {
-        const hand = [];
-        hand.push(gameState.deck.pop()); // pop cards first to players and append them to an array
-        hand.push(gameState.deck.pop());
 
-        updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
-      });
+  initListeners(socket);
 
-      addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
-      addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
-      gameState.roundInfo.activePlayer = determineFirst();
-      io.to(roomId).emit("handing cards", gameState); // update
-    }
-  });
-
-  socket.on("bet placed", (data) => {
-    const decoded = authToken(data.auth);
-    if (decoded) {
-      const playerIndex = gameState.players.findIndex(
-        (p) => p.id === decoded.user_id
-      );
-
-      switch (data.bet.type) {
-        case "fold":
-          gameState.players[playerIndex].setFold();
-          break;
-
-        case "call":
-          addToPot(
-            gameState.players[playerIndex].callBet(gameState.minimumBet)
-          );
-
-        case "raise":
-          const { amount } = data.bet;
-          if (amount) {
-            gameState.minimumBet = amount;
-            addToPot(
-              gameState.players[playerIndex].callBet(gameState.minimumBet)
-            );
-          }
-
-        // console.log(gameState);
-        default:
-          break;
-      }
-    }
-    io.to(roomId).emit("update gamestate", gameState);
-  });
+  return initListeners;
 };
 
 // ------------------------Helper functions------------------------------

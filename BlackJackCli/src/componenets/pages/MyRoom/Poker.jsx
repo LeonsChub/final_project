@@ -142,9 +142,9 @@ const Poker = () => {
           </button>
           <button
             id="call"
-            onClick={() =>
-              socket.emit("bet placed", { auth: token, bet: { type: "call" } })
-            }
+            onClick={() => {
+              socket.emit("bet placed", { auth: token, bet: { type: "call" } });
+            }}
           >
             Call
           </button>
@@ -256,6 +256,10 @@ const Poker = () => {
         auth: token,
         roomId: getRoomById(),
       });
+    });
+
+    socket.on("ready check", () => {
+      socket.emit("ready check ack", { roomId: roomData.sockData.roomId });
     });
 
     window.addEventListener("beforeunload", function (e) {
