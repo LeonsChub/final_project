@@ -13,7 +13,6 @@ const {
 } = require("../../roomManager/rooms");
 const Player = require("./player/player");
 const pokerRef = (socket, io, roomId) => {
-  const betLimiter = 0;
   function updatePlayerHand(to, hand) {
     const index = gameState.players.findIndex((player) => {
       return player.id === to;
@@ -32,10 +31,10 @@ const pokerRef = (socket, io, roomId) => {
     if (gameState.players.length === 2) {
       return gameState.players[sbIndex]["id"];
     } else {
-      if (bbIndex + 1 >= gameState.players.length) {
+      if (sbIndex + 1 >= gameState.players.length) {
         return gameState.players[0]["id"];
       } else {
-        return gameState.players[bbIndex + 1]["id"];
+        return gameState.players[sbIndex + 1]["id"];
       }
     }
   }
@@ -46,10 +45,10 @@ const pokerRef = (socket, io, roomId) => {
       return p.id === activeId;
     });
 
-    if (gameState.players[activeIndex + 1]) {
-      return gameState.players[activeIndex + 1]["id"];
+    if (gameState.players[activeIndex - 1]) {
+      return gameState.players[activeIndex - 1]["id"];
     } else {
-      return gameState.players[0]["id"];
+      return gameState.players[gameState.players.length - 1]["id"];
     }
   }
 
@@ -126,8 +125,8 @@ const pokerRef = (socket, io, roomId) => {
     community: [],
     burned: [],
     roundInfo: {
-      sbIndex: 0, //small blind index
-      bbIndex: 1, //big blind index
+      sbIndex: 1, //small blind index
+      bbIndex: 0, //big blind index
       minBet: 20,
       activePlayer: "",
       nextPlayer: "",

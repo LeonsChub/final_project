@@ -8,10 +8,9 @@ class Player {
     this.cards = [];
     this.score = [];
     this.fold = false;
-    this.ready = false;
-    this.allIn = false;
     this.specialAttrs = [];
     this.win = false;
+    this.betCount = 0;
   }
 
   setCards(cards) {
@@ -37,6 +36,7 @@ class Player {
   }
   setFold() {
     this.fold = true;
+    this.betCount = 0;
   }
   callBet() {
     if (this.stakeGap) {
@@ -54,8 +54,8 @@ class Player {
   raise(raise) {
     if (raise > this.stakeGap) {
       console.log("raising");
-      this.stake = parseInt(this.stake) + parseInt(raise);
-      this.chips = parseInt(this.chips) - parseInt(raise);
+      this.chips = parseInt(this.chips) - (parseInt(raise) - this.stake);
+      this.stake = parseInt(raise);
       this.stakeGap = 0;
 
       return parseInt(raise);
