@@ -1,8 +1,9 @@
 import React from "react";
-import '../../styles/index.css'
-import { Link } from "react-router-dom";
+import "../../styles/index.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const Welcome = () => {
+  const navigate = useNavigate();
   const logo = "<SL>CASINO</SL>";
   return (
     <div className="welcomeSpace">
@@ -13,42 +14,23 @@ const Welcome = () => {
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <div className="btnSpecial">
-              <Link to="/login">
-                <p>
-                  <span className="bg"></span>
-                  <span className="base"></span>
-                  <span className="text">Log in</span>
-                </p>
-              </Link>
-            
-          </div>
+          <button onClick={() => navigate("/login")} class="custom-btn btn-15">
+            LOG IN
+          </button>
         </div>
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <div className="btnSpecial">
-            <a href="/signup">
-              <p>
-                <span className="bg"></span>
-                <span className="base"></span>
-                <span className="text">Sign up</span>
-              </p>
-            </a>
-          </div>
+          <button onClick={() => navigate("/signup")} class="custom-btn btn-15">
+            SIGN UP
+          </button>
         </div>
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <div className="btnSpecial">
-            <a href="/main">
-              <p>
-                <span className="bg"></span>
-                <span className="base"></span>
-                <span className="text">Play as guest</span>
-              </p>
-            </a>
-          </div>
+          <button onClick={() => navigate("/main")} class="custom-btn btn-15">
+            PLAY AS GUEST
+          </button>
         </div>
       </div>
     </div>
