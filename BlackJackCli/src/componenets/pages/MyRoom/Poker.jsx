@@ -44,6 +44,7 @@ const Poker = () => {
       mountRef.current = true;
       socket.off("user joined");
       socket.off("leave room");
+      socket.off("ready check");
     };
   }, []);
 
@@ -143,6 +144,7 @@ const Poker = () => {
           <button
             id="call"
             onClick={() => {
+              console.log("emit on clink");
               socket.emit("bet placed", { auth: token, bet: { type: "call" } });
             }}
           >
@@ -150,9 +152,13 @@ const Poker = () => {
           </button>
           <button
             id="fold"
-            onClick={() =>
-              socket.emit("bet placed", { auth: token, bet: { type: "fold" } })
-            }
+            onClick={() => {
+              alert("placed");
+              return socket.emit("bet placed", {
+                auth: token,
+                bet: { type: "fold" },
+              });
+            }}
           >
             Fold
           </button>
@@ -206,7 +212,20 @@ const Poker = () => {
 
     return (
       <span id={`seat${i}`} style={{ color: "white" }}>
-        {player ? player.name : ""}
+        <p>{player ? player.name : ""}</p>
+        {player.id === roomData.gameState.activePlayer ? (
+          <div
+            style={{
+              width: "25%",
+              border: "2px solid yellow",
+              borderRadius: "12px",
+            }}
+          >
+            1213123123
+          </div>
+        ) : (
+          ""
+        )}
       </span>
     );
   }

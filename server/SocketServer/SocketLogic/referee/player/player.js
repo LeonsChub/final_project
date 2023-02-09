@@ -51,6 +51,18 @@ class Player {
       return 0;
     }
   }
+  raise(raise) {
+    if (raise > this.stakeGap) {
+      console.log("raising");
+      this.stake = parseInt(this.stake) + parseInt(raise);
+      this.chips = parseInt(this.chips) - parseInt(raise);
+      this.stakeGap = 0;
+
+      return parseInt(raise);
+    } else {
+      return 0;
+    }
+  }
   updateGap(minimumBet) {
     this.stakeGap = minimumBet - this.stake;
   }
