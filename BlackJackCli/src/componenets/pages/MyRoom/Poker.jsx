@@ -141,15 +141,33 @@ const Poker = () => {
           <button id="raise" onClick={() => setRaise(!raise)}>
             Raise
           </button>
-          <button
-            id="call"
-            onClick={() => {
-              console.log("emit on clink");
-              socket.emit("bet placed", { auth: token, bet: { type: "call" } });
-            }}
-          >
-            Call
-          </button>
+          {roomData.gameState.minimumBet !== 0 ? (
+            <button
+              id="call"
+              onClick={() => {
+                console.log("emit on clink");
+                socket.emit("bet placed", {
+                  auth: token,
+                  bet: { type: "call" },
+                });
+              }}
+            >
+              Call
+            </button>
+          ) : (
+            <button
+              id="call"
+              onClick={() => {
+                console.log("emit on clink");
+                socket.emit("bet placed", {
+                  auth: token,
+                  bet: { type: "check" },
+                });
+              }}
+            >
+              Check
+            </button>
+          )}
           <button
             id="fold"
             onClick={() => {
@@ -213,7 +231,7 @@ const Poker = () => {
     return (
       <span id={`seat${i}`} style={{ color: "white" }}>
         <p>{player ? player.name : ""}</p>
-        {player.id === roomData.gameState.activePlayer ? (
+        {player.id === roomData.gameState.roundInfo.activePlayer ? (
           <div
             style={{
               width: "25%",
@@ -221,7 +239,7 @@ const Poker = () => {
               borderRadius: "12px",
             }}
           >
-            1213123123
+            123
           </div>
         ) : (
           ""
@@ -252,6 +270,15 @@ const Poker = () => {
         oldState.gameState = data;
         return oldState;
       });
+    });
+    socket.on("advance flop", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        return oldState;
+      });
+
+      // alert("OPENING FLOP");
     });
 
     socket.on("user joined", (data) => {

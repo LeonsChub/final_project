@@ -10,7 +10,6 @@ class Player {
     this.fold = false;
     this.specialAttrs = [];
     this.win = false;
-    this.betCount = 0;
   }
 
   setCards(cards) {
@@ -36,7 +35,6 @@ class Player {
   }
   setFold() {
     this.fold = true;
-    this.betCount = 0;
   }
   callBet() {
     if (this.stakeGap) {
@@ -65,6 +63,10 @@ class Player {
   }
   updateGap(minimumBet) {
     this.stakeGap = minimumBet - this.stake;
+  }
+  resetStake() {
+    this.stake = 0;
+    this.stakeGap = 0;
   }
 }
 

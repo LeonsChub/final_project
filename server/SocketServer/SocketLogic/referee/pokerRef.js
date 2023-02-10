@@ -48,6 +48,31 @@ const pokerRef = (socket, io, roomId) => {
     }
   }
 
+  function advanceRound() {
+    const { sbIndex } = gameState.roundInfo;
+    switch (gameState.gameStage) {
+      case "preflop":
+        gameState.gameStage = "flop";
+        gameState.roundInfo.activePlayer = gameState.players[sbIndex]["id"];
+        gameState.burned.push(gameState.deck.pop());
+        gameState.community.push(gameState.deck.pop());
+        gameState.community.push(gameState.deck.pop());
+        gameState.community.push(gameState.deck.pop());
+
+        break;
+
+      default:
+        break;
+    }
+
+    gameState.players.forEach((p) => {
+      p.resetStake();
+    });
+    gameState.minimumBet = 0;
+    gameState.playerBets = {};
+    gameState.players.forEach((p) => (gameState.playerBets[p.id] = ""));
+  }
+
   function initListeners(socket) {
     socket.on("init round", () => {
       if (!gaveCards) {
@@ -69,14 +94,7 @@ const pokerRef = (socket, io, roomId) => {
         });
 
         gameState.players.forEach((p) => (gameState.playerBets[p.id] = ""));
-        console.log("init bets", gameState.playerBets);
-
         gameState.roundInfo.activePlayer = determineFirst();
-
-        console.log(gameState);
-
-        console.log("first to go", gameState.roundInfo.activePlayer);
-        console.log("next to go", determineNext());
         gameState.roundInfo.nextPlayer = determineNext();
 
         io.to(roomId).emit("handing cards", gameState); // update
@@ -114,19 +132,21 @@ const pokerRef = (socket, io, roomId) => {
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
-        console.log("after bet", gameState.playerBets);
 
-        gameState.roundInfo.activePlayer = determineNext();
-        gameState.roundInfo.nextPlayer = determineNext();
-
-        let activeId = gameState.roundInfo.activePlayer;
-
-        while (gameState.playerBets[activeId] === "fold") {
+        if (checkNextRound(gameState.playerBets)) {
+          advanceRound();
+        } else {
           gameState.roundInfo.activePlayer = determineNext();
           gameState.roundInfo.nextPlayer = determineNext();
-          activeId = gameState.roundInfo.activePlayer;
-        }
 
+          let activeId = gameState.roundInfo.activePlayer;
+
+          while (gameState.playerBets[activeId] === "fold") {
+            gameState.roundInfo.activePlayer = determineNext();
+            gameState.roundInfo.nextPlayer = determineNext();
+            activeId = gameState.roundInfo.activePlayer;
+          }
+        }
         io.to(roomId).emit("update gamestate", gameState);
       }
     });
@@ -205,4 +225,12 @@ function authToken(token) {
   return undefined;
 }
 
+function checkNextRound(playerBets) {
+  for (const id in playerBets) {
+    if (playerBets[id] === "raise" || !playerBets[id]) {
+      return false;
+    }
+  }
+  return true;
+}
 module.exports = pokerRef;
