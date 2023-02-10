@@ -31,11 +31,7 @@ const pokerRef = (socket, io, roomId) => {
     if (gameState.players.length === 2) {
       return gameState.players[sbIndex]["id"];
     } else {
-      if (sbIndex + 1 >= gameState.players.length) {
-        return gameState.players[0]["id"];
-      } else {
-        return gameState.players[sbIndex + 1]["id"];
-      }
+      return gameState.players[bbIndex + 1]["id"];
     }
   }
 
@@ -45,10 +41,10 @@ const pokerRef = (socket, io, roomId) => {
       return p.id === activeId;
     });
 
-    if (gameState.players[activeIndex - 1]) {
-      return gameState.players[activeIndex - 1]["id"];
+    if (activeIndex + 1 < gameState.players.length) {
+      return gameState.players[activeIndex + 1]["id"];
     } else {
-      return gameState.players[gameState.players.length - 1]["id"];
+      return gameState.players[0]["id"];
     }
   }
 
@@ -63,13 +59,22 @@ const pokerRef = (socket, io, roomId) => {
           updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
         });
 
+        const { sbIndex, bbIndex } = gameState.roundInfo;
+
         addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
         addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
 
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
+
+        gameState.players.forEach((p) => (gameState.playerBets[p.id] = ""));
+        console.log("init bets", gameState.playerBets);
+
         gameState.roundInfo.activePlayer = determineFirst();
+
+        console.log(gameState);
+
         console.log("first to go", gameState.roundInfo.activePlayer);
         console.log("next to go", determineNext());
         gameState.roundInfo.nextPlayer = determineNext();
@@ -88,16 +93,19 @@ const pokerRef = (socket, io, roomId) => {
         switch (data.bet.type) {
           case "fold":
             gameState.players[playerIndex].setFold();
+            gameState.playerBets[decoded.user_id] = "fold";
             break;
 
           case "call":
             addToPot(gameState.players[playerIndex].callBet());
+            gameState.playerBets[decoded.user_id] = "call";
 
           case "raise":
             const { amount } = data.bet;
             if (amount) {
               gameState.minimumBet = amount;
               addToPot(gameState.players[playerIndex].raise(amount));
+              gameState.playerBets[decoded.user_id] = "raise";
             }
           default:
             break;
@@ -106,10 +114,19 @@ const pokerRef = (socket, io, roomId) => {
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
+        console.log("after bet", gameState.playerBets);
 
-        console.log("coming up", gameState.roundInfo.nextPlayer);
         gameState.roundInfo.activePlayer = determineNext();
         gameState.roundInfo.nextPlayer = determineNext();
+
+        let activeId = gameState.roundInfo.activePlayer;
+
+        while (gameState.playerBets[activeId] === "fold") {
+          gameState.roundInfo.activePlayer = determineNext();
+          gameState.roundInfo.nextPlayer = determineNext();
+          activeId = gameState.roundInfo.activePlayer;
+        }
+
         io.to(roomId).emit("update gamestate", gameState);
       }
     });
@@ -124,9 +141,10 @@ const pokerRef = (socket, io, roomId) => {
     players: generatePlayerData(roomId),
     community: [],
     burned: [],
+    playerBets: {},
     roundInfo: {
-      sbIndex: 1, //small blind index
-      bbIndex: 0, //big blind index
+      sbIndex: 0, //small blind index
+      bbIndex: 1, //big blind index
       minBet: 20,
       activePlayer: "",
       nextPlayer: "",
@@ -138,10 +156,6 @@ const pokerRef = (socket, io, roomId) => {
   };
 
   let gaveCards = false;
-
-  //determine blinds
-  const { sbIndex, bbIndex } = gameState.roundInfo;
-  //hand cards to each player
 
   initListeners(socket);
 
