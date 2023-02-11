@@ -1,5 +1,5 @@
 import React from "react";
-import { TokenContext, SocketContext, RoomContext } from "../../../AppContext";
+import { SocketContext, RoomContext, UserContext } from "../../../AppContext";
 import { useContext, useEffect, useRef } from "react";
 // import { Button } from "react-bootstrap";
 import CreateRoomForm from "./CreateRoom";
@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 import JoinRoom from "./JoinRoom";
 
 function RoomBrowser() {
-  const [token] = useContext(TokenContext);
+  const {token,myProfile} = useContext(UserContext);
   const socket = useContext(SocketContext);
   const [roomData, setRoomData] = useContext(RoomContext);
   const navigate = useNavigate();
 
   useEffect(() => {
+    myProfile()
     socket.on("join success", (data) => {
       // initRoomData(data.roomData);console.log("INNIINTING");
       setRoomData((prev) => {
@@ -23,7 +24,7 @@ function RoomBrowser() {
         return oldState;
       });
       navigate(`/myRoom/${data.roomData.roomId}`, { replace: true });
-    });
+    },[]);
 
     socket.on("join failed", (data) => {
       console.log(data.msg);

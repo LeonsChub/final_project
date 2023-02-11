@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-
 require("dotenv").config();
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const decode = require("jwt-decode");
 // const auth = require("../middleware/auth");
 
 router.post("/register", async (req, res) => {
@@ -26,11 +26,19 @@ router.post("/register", async (req, res) => {
         username: username,
         email: email.toLowerCase(),
         password: hash,
+        chips: 5000,
       });
 
+      const token = jwt.sign(
+        { user_id: user._id, username: user.username },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "2h",
+        }
+      );
       await user.save();
 
-      res.status(201).json(user);
+      res.status(201).json(token);
     }
   } catch (err) {
     console.log(err);
@@ -56,6 +64,7 @@ router.post("/login", async (req, res) => {
           expiresIn: "2h",
         }
       );
+      console.log(token);
 
       user.token = token;
 
@@ -66,6 +75,18 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(418);
+  }
+});
+
+router.get("/chips", async (req, res) => {
+  try {
+    const token = req.headers.authorization.substring(7);
+    const { user_id } = decode(token);
+    const {chips} = await User.findById(user_id);
+    console.log(chips)
+    res.status(200).json(chips)
+  } catch (e) {
+    res.status(400).send(e)
   }
 });
 

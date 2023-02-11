@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
 import io from "socket.io-client";
+import jwtDecode from "jwt-decode";
+import { apiService } from './ApiService/ApiService';
 
 export const SocketContext = React.createContext();
-export const TokenContext = React.createContext();
 export const RoomContext = React.createContext();
 export const ScrollersContext = React.createContext();
+export const UserContext = React.createContext();
 
 const socket = io.connect("http://localhost:3030", {
   closeOnBeforeunload: false,
@@ -13,7 +15,26 @@ const socket = io.connect("http://localhost:3030", {
 // const socket = io.connect("http://localhost:3030");
 
 function AppContext({ children }) {
-  const [token, setToken] = useState("EMPTY");
+  const [token, setToken] = useState();
+  const [user, setUser] = useState();
+  const [chips, setChips] = useState();
+
+  const myProfile = () => {
+    const myToken = localStorage.getItem("token");
+    setToken(myToken);
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUser(decoded);
+      return;
+    } else {
+      return;
+    }
+  };
+
+  const getChips = () =>{
+    apiService.getChips().then(res=> setChips(res))
+  }
+
   const [roomData, setRoomData] = useState({
     sockData: {
       hostName: "",
@@ -67,7 +88,7 @@ function AppContext({ children }) {
 
   return (
     <SocketContext.Provider value={socket}>
-      <TokenContext.Provider value={[token, setToken]}>
+      <UserContext.Provider value={{ user, token, myProfile, chips, setChips,getChips }}>
         <RoomContext.Provider value={[roomData, setRoomData, blankGameState]}>
           <ScrollersContext.Provider
             value={{
@@ -82,7 +103,7 @@ function AppContext({ children }) {
             {children}
           </ScrollersContext.Provider>
         </RoomContext.Provider>
-      </TokenContext.Provider>
+      </UserContext.Provider>
     </SocketContext.Provider>
   );
 }

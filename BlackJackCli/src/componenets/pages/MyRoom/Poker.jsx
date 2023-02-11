@@ -2,14 +2,18 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import MySlider from "./TableComps/Slider";
 import "./style/poker.css";
 import { useNavigate } from "react-router-dom";
-import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import {
+  RoomContext,
+  SocketContext,
+  UserContext,
+} from "../../../AppContext";
 import jwt from "jwt-decode";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Card from "./../../Card";
 import packageImg from "../../../../images/deck.webp";
 import gsap from "gsap";
 import Chips from "../../Chips";
-import './../../../styles/btns.css'
+import "./../../../styles/btns.css";
 
 const renderTime = ({ remainingTime }) => {
   if (remainingTime === 0) {
@@ -27,7 +31,7 @@ const renderTime = ({ remainingTime }) => {
 const Poker = () => {
   const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const { token, myProfile } = useContext(UserContext);
   const { user_id } = jwt(token);
 
   const mountRef = useRef(false);
@@ -36,6 +40,7 @@ const Poker = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
+    myProfile();
     // if (gameStarted) {
     gsap.to(".myPlayingCard1", { y: 290, x: 20, duration: 1.5 });
     setTimeout(() => {
@@ -210,7 +215,9 @@ const Poker = () => {
         <button id="fold">Fold</button>
       </div>
       <div className="betNChips">
-        <Chips value={2000}/>
+        <>
+          <Chips value={2000} />
+        </>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
           return bets(index + 1);
         })}

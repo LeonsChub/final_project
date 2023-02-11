@@ -1,44 +1,43 @@
 import React, { useState, useContext } from "react";
-// import { axios } from "axios";
-import axios from "axios";
-import { UserContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import { apiService } from "./../../ApiService/ApiService";
+import { UserContext } from "./../../AppContext";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
   const { myProfile } = useContext(UserContext);
 
   async function validateAndSend(e) {
     e.preventDefault();
+    console.log({ email: email, username: username, password: password });
     if (!email || !password) {
       setError("Please fill out all fields properly");
     } else {
       await apiService
-        .login(email, password)
+        .register(email, username, password)
         .then((res) => {
-          localStorage.setItem('token',res.data)
-          myProfile()
+          localStorage.setItem("token", res.data);
+          myProfile();
           navigate("/");
         })
         .catch((err) => {
-          setError(err.response.data);
+          setError(err["response"]["data"]);
         });
     }
   }
 
   return (
     <div className="welcomeSpace">
-      <div className="LoginSpace">
-        <div className="loginHeaderSpace">
-          <h2 id="form1Header">Register</h2>
+      <div className="signupSpace">
+        <div className="signupHeaderSpace">
+          <h2 id="form1Header">Signup</h2>
         </div>
-        <form action="login" className="form1">
-          <label className="f1Labels" htmlFor="username">
+        <form action="signup" className="form1">
+          <label className="f1Labels" htmlFor="email">
             Email
           </label>
           <input
@@ -49,6 +48,18 @@ const Login = () => {
             placeholder="Enter username"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+          />
+          <label className="f1Labels" htmlFor="username">
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            className="f1Inputs"
+            id="usernameLog"
+            placeholder="Enter username"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
           />
           <label className="f1Labels" htmlFor="password">
             Password
@@ -61,9 +72,6 @@ const Login = () => {
             placeholder="Enter password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <a id="forgotPassword" href="">
-            Forgot password?
-          </a>
           <div className="btnSpecial">
             <button
               onClick={(e) => validateAndSend(e)}
@@ -74,10 +82,10 @@ const Login = () => {
           </div>
           <div className="btnSpecial">
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/")}
               className="custom-btn btn-15B"
             >
-              Create new user
+              Back to main menu
             </button>
           </div>
         </form>
@@ -86,4 +94,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

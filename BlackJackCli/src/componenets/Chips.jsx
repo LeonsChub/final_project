@@ -18,7 +18,7 @@ const Chips = ({ value }) => {
         break;
     }
   }
-  switch (renderChips(value)) {
+  switch (() => renderChips(value)) {
     case "white":
       return (
         <div className="cont">

@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
-import { SocketContext, TokenContext } from "../../../AppContext";
+import { SocketContext, UserContext } from "../../../AppContext";
 
 function CreateRoomForm() {
   const [name, setName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [nameError, setNameError] = useState("");
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const {token,myProfile} = useContext(UserContext);
   useEffect(() => {
+    myProfile()
     socket.on("create failed", (data) => {
       setNameError(data.msg);
     });
