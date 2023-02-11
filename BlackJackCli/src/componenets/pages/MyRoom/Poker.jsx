@@ -21,7 +21,7 @@ const Poker = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [raise, setRaise] = useState(false);
   const [raiseBet, setRaiseBet] = useState(undefined);
-  const [bet, setBet] = useState(roomData.gameState.blind);
+  const [clockKey, setClockKey] = useState(0);
   const [currentBet, setCurrentBet] = useState(0);
 
   useEffect(() => {
@@ -47,6 +47,12 @@ const Poker = () => {
       socket.off("ready check");
     };
   }, []);
+
+  useEffect(() => {
+    if (roomData.gameState.gameStage === "showdown") {
+      alert("wow u all won cause we didnt calculate the winner function");
+    }
+  }, [roomData]);
 
   const confirmRaise = () => {
     setRaise(!raise);
@@ -171,7 +177,6 @@ const Poker = () => {
           <button
             id="fold"
             onClick={() => {
-              alert("placed");
               return socket.emit("bet placed", {
                 auth: token,
                 bet: { type: "fold" },
@@ -212,6 +217,9 @@ const Poker = () => {
       <h1 style={{ position: "absolute", top: "15%", right: "5%" }}>
         MIN BET :{roomData.gameState.minimumBet}
       </h1>
+      <h1 style={{ position: "absolute", top: "5%", right: "40%" }}>
+        {roomData.gameState.gameStage}
+      </h1>
     </div>
   );
   function bets(i, playerId) {
@@ -239,7 +247,7 @@ const Poker = () => {
               borderRadius: "12px",
             }}
           >
-            123
+            1
           </div>
         ) : (
           ""
@@ -268,17 +276,17 @@ const Poker = () => {
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
+        setClockKey((prev) => prev + 1);
         return oldState;
       });
     });
-    socket.on("advance flop", (data) => {
+    socket.on("handing cards", (data) => {
+      console.log("Getting cards from server");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
         return oldState;
       });
-
-      // alert("OPENING FLOP");
     });
 
     socket.on("user joined", (data) => {
@@ -333,12 +341,16 @@ const Poker = () => {
   function renderTimer() {
     return (
       <CountdownCircleTimer
+        key={clockKey}
         isPlaying={true}
         duration={20}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[20, 15, 8, 0]}
         onComplete={() => {
-          socket.emit("player done", { playerId: user_id });
+          socket.emit("bet placed", {
+            auth: token,
+            bet: { type: "fold" },
+          });
         }}
       >
         {({ remainingTime }) => remainingTime}
