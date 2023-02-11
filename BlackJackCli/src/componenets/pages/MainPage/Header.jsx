@@ -3,6 +3,11 @@ import { ScrollersContext } from "../../../AppContext";
 const Header = () => {
   const {gamesClick, profileClick, aboutClick} = useContext(ScrollersContext)
   const logo = "<SL>CASINO</SL>";
+
+  const logOut = ()=>{
+    localStorage.removeItem('token');
+    location.reload()
+  }
   return (
     <div className="headerSpace">
       <div className="headerItems">
@@ -26,6 +31,9 @@ const Header = () => {
         </a>
       </div>
       <div className="headerItems"></div>
+      <div onClick={()=> logOut()}>
+        <button>Log Out</button>
+      </div>
     </div>
   );
 };

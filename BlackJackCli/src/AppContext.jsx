@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import io from "socket.io-client";
 import jwtDecode from "jwt-decode";
-import { apiService } from './ApiService/ApiService';
+import { apiService } from "./ApiService/ApiService";
 
 export const SocketContext = React.createContext();
 export const RoomContext = React.createContext();
@@ -31,10 +31,13 @@ function AppContext({ children }) {
     }
   };
 
-  const getChips = () =>{
-    apiService.getChips().then(res=> setChips(res))
-  }
+  const getChips = () => {
+    apiService.getChips().then((res) => setChips(res));
+  };
 
+  const postChips = (num) => {
+    apiService.postChips(num).then((res) => setChips(res));
+  };
   const [roomData, setRoomData] = useState({
     sockData: {
       hostName: "",
@@ -88,7 +91,9 @@ function AppContext({ children }) {
 
   return (
     <SocketContext.Provider value={socket}>
-      <UserContext.Provider value={{ user, token, myProfile, chips, setChips,getChips }}>
+      <UserContext.Provider
+        value={{ user, token, myProfile, chips, setChips, getChips, postChips }}
+      >
         <RoomContext.Provider value={[roomData, setRoomData, blankGameState]}>
           <ScrollersContext.Provider
             value={{

@@ -1,4 +1,5 @@
 const express = require("express");
+const verifyUser = require('../../middlewares/verifyUser')
 const router = express.Router();
 require("dotenv").config();
 const User = require("../Models/User");
@@ -64,8 +65,6 @@ router.post("/login", async (req, res) => {
           expiresIn: "2h",
         }
       );
-      console.log(token);
-
       user.token = token;
 
       res.status(200).json(token);
@@ -78,15 +77,28 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/chips", async (req, res) => {
+router.get("/chips", verifyUser, async (req, res) => {
   try {
     const token = req.headers.authorization.substring(7);
     const { user_id } = decode(token);
-    const {chips} = await User.findById(user_id);
-    console.log(chips)
-    res.status(200).json(chips)
+    const { chips } = await User.findById(user_id);
+    res.status(200).json(chips);
   } catch (e) {
-    res.status(400).send(e)
+    res.status(400).send(e);
+  }
+});
+
+router.post("/chips", async (req, res) => {
+  try {
+    const body = req.body;
+    const token = req.headers.authorization.substring(7);
+    const { user_id } = decode(token);
+    const results = await User.findByIdAndUpdate(user_id, body);
+    console.log(results);
+    res.status(200).json(results.chips);
+  } catch (e) {
+    console.log(1);
+    res.status(400).send(e);
   }
 });
 

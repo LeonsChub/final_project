@@ -4,7 +4,6 @@ import chipIMG from "../../../../images/chip2.png";
 import renderSlot from "./../../Slot";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../../AppContext";
-import { apiService } from "./../../../ApiService/ApiService";
 
 const Machines = () => {
   const navigate = useNavigate();
@@ -14,11 +13,12 @@ const Machines = () => {
   const [animated1, setAnimated1] = useState("");
   const [animated2, setAnimated2] = useState("");
   const [animated3, setAnimated3] = useState("");
-  const [chipsValue, setChipsValue] = useState(0);
+  const [bid, setBid] = useState(0);
   const [result, setResult] = useState("LETS PLAY!");
-  const { chips, setChips ,getChips} = useContext(UserContext);
+  const { chips, setChips, getChips, postChips } = useContext(UserContext);
+
   const handleRestults = () => {
-    setChips(chips - chipsValue);
+    setChips(chips - bid);
     setAnimated1("slotAnimated1");
     setAnimated2("slotAnimated2");
     setAnimated3("slotAnimated3");
@@ -34,36 +34,49 @@ const Machines = () => {
       setRoller3(newRoller3);
       if (newRoller1 === newRoller2 && newRoller1 === newRoller3) {
         setResult("BIG WIN - 3/3");
-        setChipsValue(chipsValue * 3);
-        setChipsValue(chips + chips);
+        const win = bid * 3;
+        const result = chips + win - bid;
+        postChips(result);
+        setAnimated1("");
+        setAnimated2("");
+        setAnimated3("");
+        getChips();
+        setBid(win);
+        return;
       } else if (
         (newRoller1 === newRoller2 && newRoller1 !== newRoller3) ||
         (newRoller1 === newRoller3 && newRoller1 !== newRoller2) ||
         (newRoller2 === newRoller3 && newRoller1 !== newRoller2)
       ) {
-        setResult("WIN - 2/3");
-        setChipsValue(chipsValue * 2);
-        setChipsValue(chips + chipsValue);
+        setResult("TIE - 2/3");
+        setAnimated1("");
+        setAnimated2("");
+        setAnimated3("");
+        getChips();
+        return;
       } else {
         setResult("LOSE");
-        setChipsValue(0);
+        postChips(chips - bid);
+        setAnimated1("");
+        setAnimated2("");
+        setAnimated3("");
+        getChips();
+        setBid(0);
+        return;
       }
-      setAnimated1("");
-      setAnimated2("");
-      setAnimated3("");
     }, 4000);
   };
   const handleChips = (num) => {
-    if (num == 1 && chipsValue >= 0 && chipsValue <= chips - 100) {
-      setChipsValue(chipsValue + 100);
-    } else if (num == 2 && chipsValue >= 100) {
-      setChipsValue(chipsValue - 100);
+    if (num == 1 && bid >= 0 && bid <= chips - 100) {
+      setBid(bid + 100);
+    } else if (num == 2 && bid >= 100) {
+      setBid(bid - 100);
     }
   };
   useEffect(() => {
-   getChips()
+    getChips();
   }, []);
-  useEffect(() => {}, [roller1, roller2, roller3, result, chipsValue]);
+  useEffect(() => {}, [roller1, roller2, roller3, result, bid]);
   return (
     <div className="machinesPage">
       <div className="machineNav">
@@ -82,7 +95,7 @@ const Machines = () => {
         <div className="machine">
           <div id="displayResult">
             <span id="machineResult">{result}</span>
-            <span id="machineChips">{chipsValue} CHIPS</span>
+            <span id="machineChips">{bid} CHIPS</span>
           </div>
           <div className="rollers">
             <div className="roller">
