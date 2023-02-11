@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ScrollersContext } from "../../../AppContext";
 import { LineChart } from "../../LineChart";
+import { PieChart } from "../../PieChart";
 const Profile = () => {
   const { profileRef } = useContext(ScrollersContext);
   return (
@@ -10,13 +11,14 @@ const Profile = () => {
       </div>
       <div className="stats">
         <div className="stat">
-          {/* <p>All Games</p> */}
           <div className="chart1">
             <LineChart />
           </div>
         </div>
         <div className="stat">
-          <p>Poker</p>
+          <div className="chart1">
+            <PieChart />
+          </div>
         </div>
         <div className="stat">
           <p>Roullete</p>

@@ -18,6 +18,10 @@ const Machines = () => {
   const { chips, setChips, getChips, postChips } = useContext(UserContext);
 
   const handleRestults = () => {
+    if (bid===0){
+        alert('Cannot play without bidding')
+        return
+    }
     setChips(chips - bid);
     setAnimated1("slotAnimated1");
     setAnimated2("slotAnimated2");

@@ -23,13 +23,21 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+
+  colors: {
+    enabled: false,
+  },
   plugins: {
     legend: {
       position: "top",
     },
+    colors: {
+      forceOverride: true,
+    },
     title: {
       display: true,
-      text: "Chart.js Line Chart",
+      text: "General Chips Chart",
+      color: "black",
     },
   },
 };
@@ -71,18 +79,14 @@ export const data = {
   labels,
   datasets: [
     {
-      label: "Chips PNL",
+      label: "Your chips PNL",
       data: chips.map((chip) => chip.price),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      borderColor: "gold",
+      backgroundColor: "gold",
     },
   ],
 };
 
 export function LineChart() {
-  return (
-    <div className="LineChart">
-      <Line options={options} data={data} />
-    </div>
-  );
+  return <Line options={options} data={data} />;
 }
