@@ -14,21 +14,21 @@ const Welcome = () => {
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <button onClick={() => navigate("/login")} class="custom-btn btn-15">
+          <button onClick={() => navigate("/login")} className="custom-btn btn-15">
             LOG IN
           </button>
         </div>
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <button onClick={() => navigate("/signup")} class="custom-btn btn-15">
+          <button onClick={() => navigate("/signup")} className="custom-btn btn-15">
             SIGN UP
           </button>
         </div>
       </div>
       <div className="welcomeBtnSpace">
         <div className="welcomeBtns">
-          <button onClick={() => navigate("/main")} class="custom-btn btn-15">
+          <button onClick={() => navigate("/main")} className="custom-btn btn-15">
             PLAY AS GUEST
           </button>
         </div>

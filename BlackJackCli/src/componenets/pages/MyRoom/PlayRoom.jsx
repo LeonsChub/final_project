@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import { RoomContext, SocketContext, UserContext } from "../../../AppContext";
 import Card from "../../Card";
 import jwt from "jwt-decode";
 // import { Button } from "react-bootstrap";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 function PlayRoom() {
   const [roomData, setRoomData] = useContext(RoomContext);
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const { token, myProfile } = useContext(UserContext);
   const navigate = useNavigate();
   const mountRef = useRef();
   const { user_id } = jwt(token);
@@ -23,6 +23,7 @@ function PlayRoom() {
   //   }
 
   useEffect(() => {
+    myProfile()
     socket.on("handing cards", (data) => {
       console.log("new Data", data);
       setRoomData((prev) => {
@@ -30,7 +31,7 @@ function PlayRoom() {
         oldState.gameState = data;
         return oldState;
       });
-    });
+    },[]);
 
     // socket.on("update deck", (data) => {
     //   setRoomData((prev) => {

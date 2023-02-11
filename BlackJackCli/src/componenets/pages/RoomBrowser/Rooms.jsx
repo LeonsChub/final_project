@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import axios from "axios";
-import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import { RoomContext, SocketContext, UserContext } from "../../../AppContext";
 import { useNavigate } from "react-router-dom";
 
 const Rooms = () => {
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const { token, myProfile } = useContext(UserContext);
   const [roomData, setRoomData] = useContext(RoomContext);
 
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const Rooms = () => {
   }
 
   useEffect(() => {
+    myProfile();
     initSocketListeners();
 
     return () => {

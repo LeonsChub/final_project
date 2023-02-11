@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 // import { axios } from "axios";
 import axios from "axios";
-import { TokenContext } from "../../AppContext";
+import { UserContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
+import { apiService } from "./../../ApiService/ApiService";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,21 +11,22 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const [token, setToken] = useContext(TokenContext);
+  const { myProfile } = useContext(UserContext);
 
-  function validateAndSend(e) {
-    e.preventDefault()
+  async function validateAndSend(e) {
+    e.preventDefault();
     if (!email || !password) {
       setError("Please fill out all fields properly");
     } else {
-      axios
-        .post("http://localhost:3000/users/login", { email, password })
+      await apiService
+        .login(email, password)
         .then((res) => {
-          setToken(res["data"]);
+          localStorage.setItem('token',res.data)
+          myProfile()
           navigate("/");
         })
         .catch((err) => {
-          setError(err["response"]["data"]);
+          setError(err.response.data);
         });
     }
   }

@@ -14,6 +14,7 @@ const {
 const jwt = require("jsonwebtoken");
 const pokerRef = require("./referee/pokerRef");
 const MAX_PLAYERS = 7;
+const allRefs = [];
 
 function initSocket(io) {
   io.on("connection", (socket) => {
@@ -24,6 +25,7 @@ function initSocket(io) {
     socketListenLeaveRoom(socket, io);
     socketListenDisbandRoom(socket, io);
     socketListenStartGame(socket, io);
+    socketListenReadyGame(socket);
 
     socket.on("fetch rooms", () => {
       socket.emit("update rooms", { rooms: getAllRooms() });
@@ -150,10 +152,27 @@ function socketListenStartGame(socket, io) {
         data.roomId &&
         decoded.user_id === getRoomHost(data.roomId)
       ) {
-        pokerRef(socket, io, data.roomId);
+        allRefs.push({
+          joinSocket: pokerRef(socket, io, data.roomId),
+          roomId: data.roomId,
+        });
+        socket.to(data.roomId).emit("ready check");
       }
     } else {
       console.log("NO DATA PROVIDED");
+    }
+  });
+}
+
+function socketListenReadyGame(socket) {
+  socket.on("ready check ack", (data) => {
+    console.log("Ready check acknowledged from", socket.id);
+    const index = allRefs.findIndex((refPointer) => {
+      return refPointer.roomId === data.roomId;
+    });
+
+    if (index !== -1) {
+      allRefs[index].joinSocket(socket);
     }
   });
 }

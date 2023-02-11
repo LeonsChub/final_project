@@ -2,40 +2,33 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import MySlider from "./TableComps/Slider";
 import "./style/poker.css";
 import { useNavigate } from "react-router-dom";
-import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import {
+  RoomContext,
+  SocketContext,
+  UserContext,
+} from "../../../AppContext";
 import jwt from "jwt-decode";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Card from "./../../Card";
 import packageImg from "../../../../images/deck.webp";
 import gsap from "gsap";
 import Chips from "../../Chips";
-import './../../../styles/btns.css'
-
-const renderTime = ({ remainingTime }) => {
-  if (remainingTime === 0) {
-    return <div className="timer">Too late...</div>;
-  }
-  return (
-    <div className="timer">
-      <div className="text">Remaining</div>
-      <div className="value">{remainingTime}</div>
-      <div className="text">seconds</div>
-    </div>
-  );
-};
+import "./../../../styles/btns.css";
 
 const Poker = () => {
   const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const { token, myProfile } = useContext(UserContext);
   const { user_id } = jwt(token);
 
   const mountRef = useRef(false);
+  const gotCardsRef = useRef(false);
 
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
+    myProfile();
     // if (gameStarted) {
     gsap.to(".myPlayingCard1", { y: 290, x: 20, duration: 1.5 });
     setTimeout(() => {
@@ -80,20 +73,9 @@ const Poker = () => {
     // }
   }, [gameStarted]);
   const [raise, setRaise] = useState(false);
-  const [value, setValue] = useState(0);
-  const [timer, setTimer] = useState(false);
-  const [bet, setBet] = useState(roomData.gameState.blind);
+  const [raiseBet, setRaiseBet] = useState(undefined);
+  const [clockKey, setClockKey] = useState(0);
   const [currentBet, setCurrentBet] = useState(0);
-  // const {
-  //   path,
-  //   pathLength,
-  //   stroke,
-  //   strokeDashoffset,
-  //   remainingTime,
-  //   elapsedTime,
-  //   size,
-  //   strokeWidth,
-  // } = useCountdown({ isPlaying: timer, duration: 30, colors: "#abc" });
 
   useEffect(() => {
     initListeners();
@@ -115,16 +97,29 @@ const Poker = () => {
       mountRef.current = true;
       socket.off("user joined");
       socket.off("leave room");
+      socket.off("ready check");
     };
   }, []);
 
-  const handleBet = async () => {
-    setCurrentBet(value);
-    setBet(value);
+  useEffect(() => {
+    if (roomData.gameState.gameStage === "showdown") {
+      alert("wow u all won cause we didnt calculate the winner function");
+    }
+  }, [roomData]);
+
+  const confirmRaise = () => {
     setRaise(!raise);
+    if (raiseBet) {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "raise", amount: raiseBet },
+      });
+    }
   };
   const startingGame = () => {
     setGameStarted(true);
+    handCardsAnimation();
+
     socket.emit("start game", {
       auth: token,
       roomId: roomData.sockData.roomId,
@@ -136,35 +131,35 @@ const Poker = () => {
         <div>
           <div className="sliderSpace sliderWithValues1">
             <MySlider
-              value={value}
-              setValue={setValue}
-              myChips={5000}
-              currentBet={currentBet}
+              value={raiseBet}
+              setValue={setRaiseBet}
+              myChips={getPlayerChips(user_id)}
+              currentBet={roomData.gameState.roundInfo.minBet}
             />
           </div>
           <button
             className="sliderWithValues"
             id="allInBtn"
-            onClick={() => setValue(22)}
+            onClick={() => setRaiseBet(getPlayerChips(user_id))}
           >
             ALL IN
           </button>
           <button
             className="sliderWithValues"
-            onClick={() => handleBet()}
+            onClick={() => confirmRaise()}
             id="confirmBtn"
           >
             Confirm
           </button>
-          <p id="sliderValue">{value}</p>
+          <p id="sliderValue">{raiseBet}</p>
         </div>
       ) : (
         <></>
       )}
       <div className="timerSpace">
-        {renderTimer()}
-
-        <div className="timer-wrapper"></div>
+        {roomData.gameState.roundInfo.activePlayer === user_id
+          ? renderTimer()
+          : undefined}
       </div>
       <div className="leftSide">
         <button
@@ -200,19 +195,56 @@ const Poker = () => {
       <div className="blindSpace">
         <p id="blind">Blind: {roomData.gameState.blind}</p>
       </div>
-      <div className="pokerBtns">
-        <button id="raise" onClick={() => setRaise(!raise)}>
-          Raise
-        </button>
-        <button onClick={() => setTimer(!timer)} id="call">
-          Call
-        </button>
-        <button id="fold">Fold</button>
-      </div>
-      <div className="betNChips">
-        <Chips value={2000}/>
+
+      {user_id === roomData.gameState.roundInfo.activePlayer ? (
+        <div className="pokerBtns">
+          <button id="raise" onClick={() => setRaise(!raise)}>
+            Raise
+          </button>
+          {roomData.gameState.minimumBet !== 0 ? (
+            <button
+              id="call"
+              onClick={() => {
+                console.log("emit on clink");
+                socket.emit("bet placed", {
+                  auth: token,
+                  bet: { type: "call" },
+                });
+              }}
+            >
+              Call
+            </button>
+          ) : (
+            <button
+              id="call"
+              onClick={() => {
+                console.log("emit on clink");
+                socket.emit("bet placed", {
+                  auth: token,
+                  bet: { type: "check" },
+                });
+              }}
+            >
+              Check
+            </button>
+          )}
+          <button
+            id="fold"
+            onClick={() => {
+              return socket.emit("bet placed", {
+                auth: token,
+                bet: { type: "fold" },
+              });
+            }}
+          >
+            Fold
+          </button>
+        </div>
+      ) : undefined}
+      <div>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
-          return bets(index + 1);
+          return bets(index + 1, p.id);
+
         })}
       </div>
       <div className="pokerTable">
@@ -263,7 +295,10 @@ const Poker = () => {
           return seats(index + 1);
         })}
         {reorderCenter(roomData.sockData.players).map((p, index) => {
-          return moneys(index + 1);
+
+
+          return moneys(index + 1, p.id);
+
         })}
         <div className="package">
           <img id="packageImg" src={packageImg} alt="package IMG" />
@@ -277,25 +312,63 @@ const Poker = () => {
           <div id="c5Place"></div>
         </div>
       </div>
+
+      <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
+        POT :{roomData.gameState.pot}
+      </h1>
+      <h1 style={{ position: "absolute", top: "15%", right: "5%" }}>
+        MIN BET :{roomData.gameState.minimumBet}
+      </h1>
+      <h1 style={{ position: "absolute", top: "5%", right: "40%" }}>
+        {roomData.gameState.gameStage}
+      </h1>
     </div>
   );
-  function bets(i) {
-    return <p className="bets" id={`bet${i}`}></p>;
+  function bets(i, playerId) {
+    let playerBet = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    playerBet = playerBet ? playerBet["stake"] : "";
+    return (
+      <p className="bets" id={`bet${i}`}>
+        {playerBet}
+      </p>
+    );
   }
   function seats(i) {
     const player = reorderCenter(roomData.sockData.players)[i - 1];
 
-    return <span id={`seat${i}`}>{player ? player.name : ""}</span>;
+
+    return (
+      <span id={`seat${i}`} style={{ color: "white" }}>
+        <p>{player ? player.name : ""}</p>
+        {player.id === roomData.gameState.roundInfo.activePlayer ? (
+          <div
+            style={{
+              width: "25%",
+              border: "2px solid yellow",
+              borderRadius: "12px",
+            }}
+          >
+            1
+          </div>
+        ) : (
+          ""
+        )}
+      </span>
+    );
+
   }
-  function moneys(i) {
+  function moneys(i, playerId) {
     return (
       <div id={`money${i}`} className="moneys">
-        <p className="moneyNum"></p>
+        <p className="moneyNum">{getPlayerChips(playerId)}</p>
       </div>
     );
   }
   function initListeners() {
     socket.on("handing cards", (data) => {
+
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -304,6 +377,15 @@ const Poker = () => {
     });
 
     socket.on("update gamestate", (data) => {
+      setRoomData((prev) => {
+        const oldState = { ...prev };
+        oldState.gameState = data;
+        setClockKey((prev) => prev + 1);
+        return oldState;
+      });
+    });
+    socket.on("handing cards", (data) => {
+      console.log("Getting cards from server");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -334,13 +416,10 @@ const Poker = () => {
       });
     });
 
-    socket.on("ref ready", (data) => {
-      console.log(data);
-      setRoomData((prev) => {
-        const oldState = { ...prev };
-        oldState.gameState = data;
-        return oldState;
-      });
+
+    socket.on("ready check", () => {
+      socket.emit("ready check ack", { roomId: roomData.sockData.roomId });
+
     });
 
     window.addEventListener("beforeunload", function (e) {
@@ -356,14 +435,29 @@ const Poker = () => {
     });
   }
 
+  function getPlayerChips(playerId) {
+    let playerChips = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    playerChips = playerChips ? playerChips["chips"] : "";
+
+    return playerChips;
+  }
+
   function renderTimer() {
     return (
       <CountdownCircleTimer
-        isPlaying={gameStarted}
+        key={clockKey}
+        isPlaying={true}
         duration={20}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[20, 15, 8, 0]}
-        onComplete={() => [true, 1000]}
+        onComplete={() => {
+          socket.emit("bet placed", {
+            auth: token,
+            bet: { type: "fold" },
+          });
+        }}
       >
         {({ remainingTime }) => remainingTime}
       </CountdownCircleTimer>
@@ -383,5 +477,21 @@ const Poker = () => {
 
     return reordered;
   }
+
+
+  function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+  async function handCardsAnimation() {
+    if (!gotCardsRef.current) {
+      console.log("handing cards animation");
+      await sleep(1500);
+      console.log("finished handing cards getting data from server");
+      socket.emit("init round");
+    }
+  }
+
 };
 export default Poker;
