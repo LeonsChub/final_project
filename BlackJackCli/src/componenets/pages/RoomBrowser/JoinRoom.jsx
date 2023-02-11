@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { SocketContext, TokenContext } from "../../../AppContext";
+import { SocketContext, UserContext } from "../../../AppContext";
 // import Button from "react-bootstrap/Button";
 
 function JoinRoom() {
   const socket = useContext(SocketContext);
-  const [token] = useContext(TokenContext);
+  const {token,myProfile} = useContext(UserContext);
   const [roomsToJoin, setRoomsToJoin] = useState([]);
   useEffect(() => {
+    myProfile()
     socket.emit("fetch rooms");
 
     socket.on("update rooms", (data) => {

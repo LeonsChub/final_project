@@ -1,30 +1,32 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 // import { axios } from "axios";
 import axios from "axios";
-import { TokenContext } from "../../AppContext";
+import { UserContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
-
+import { apiService } from "./../../ApiService/ApiService";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
-  const [token, setToken] = useContext(TokenContext);
 
-  function validateAndSend() {
+  const { myProfile } = useContext(UserContext);
+
+  async function validateAndSend(e) {
+    e.preventDefault();
     if (!email || !password) {
       setError("Please fill out all fields properly");
     } else {
-      axios
-        .post("http://localhost:3000/users/login", { email, password })
+      await apiService
+        .login(email, password)
         .then((res) => {
-          setToken(res["data"]);
+          localStorage.setItem('token',res.data)
+          myProfile()
           navigate("/");
         })
         .catch((err) => {
-          setError(err["response"]["data"]);
+          setError(err.response.data);
         });
     }
   }
@@ -35,7 +37,7 @@ const Login = () => {
         <div className="loginHeaderSpace">
           <h2 id="form1Header">Register</h2>
         </div>
-        <form action="login" className="form1" >
+        <form action="login" className="form1">
           <label className="f1Labels" htmlFor="username">
             Email
           </label>
@@ -45,8 +47,8 @@ const Login = () => {
             className="f1Inputs"
             id="usernameLog"
             placeholder="Enter username"
-            onChange={(e) => setEmail( e.target.value)}
-            value = {email}
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
           />
           <label className="f1Labels" htmlFor="password">
             Password
@@ -63,26 +65,20 @@ const Login = () => {
             Forgot password?
           </a>
           <div className="btnSpecial">
-            <a href="#">
-              <p>
-                <span className="bg"></span>
-                <span className="base"></span>
-                <span onClick={() => validateAndSend()} className="text">
-                  SUBMIT
-                </span>
-              </p>
-            </a>
+            <button
+              onClick={(e) => validateAndSend(e)}
+              className="custom-btn btn-15B"
+            >
+              Submit
+            </button>
           </div>
-          <div className="toSignUpSpace">
-            <div className="btnSpecial">
-              <a href="/signup">
-                <p>
-                  <span className="bg"></span>
-                  <span className="base"></span>
-                  <span className="text">Create new user</span>
-                </p>
-              </a>
-            </div>
+          <div className="btnSpecial">
+            <button
+              onClick={() => navigate("/signup")}
+              className="custom-btn btn-15B"
+            >
+              Create new user
+            </button>
           </div>
         </form>
       </div>

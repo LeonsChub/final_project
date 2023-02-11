@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { TokenContext } from "../../AppContext";
+import { useContext ,useEffect} from "react";
 import Login from "./Login";
+import Games from "./MainPage/Games";
+import { UserContext } from "./../../AppContext";
 
 function LoginPage() {
-  const [token] = useContext(TokenContext);
-  return (
-    <div className="">
-      {token === "EMPTY" ? <Login /> : <h1>ALREADY LOGGED IN</h1>}
-    </div>
-  );
+  const { token, myProfile } = useContext(UserContext);
+  useEffect(() => {
+    myProfile();
+  }, []);
+  return <div className="">{!token ? <Login /> : <Games />}</div>;
 }
 
 export default LoginPage;

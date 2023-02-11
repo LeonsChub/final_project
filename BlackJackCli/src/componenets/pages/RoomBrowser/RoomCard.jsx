@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomContext, SocketContext, TokenContext } from "../../../AppContext";
+import { RoomContext, SocketContext, UserContext } from "../../../AppContext";
 // import { Card as BootCard } from "react-bootstrap";
 // import Button from "react-bootstrap/Button";
 import jwt from "jwt-decode";
@@ -8,12 +8,13 @@ import { useNavigate } from "react-router-dom";
 function RoomCard() {
   const socket = useContext(SocketContext);
   const [roomData, setRoomData, updateRoomData] = useContext(RoomContext);
-  const [token] = useContext(TokenContext);
+  const {token,myProfile} = useContext(UserContext);
   const isAdmin = jwt(token).user_id === roomData.sockData.hostId;
   const navigate = useNavigate();
   const mountRef = useRef(false);
 
   useEffect(() => {
+    myProfile()
     setUpListenets(socket);
 
     // return () => {

@@ -217,7 +217,9 @@ const pokerRef = (socket, io, roomId) => {
 
   let gaveCards = false;
 
+
   initListeners(socket);
+
 
   return initListeners;
 };
