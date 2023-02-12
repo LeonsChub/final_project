@@ -85,7 +85,7 @@ const Machines = () => {
     <div className="machinesPage">
       <div className="machineNav">
         <button onClick={() => navigate("/")} className="custom-btn btn-13">
-          Leave game
+          Leave Game
         </button>
       </div>
       <div className="chipsWallet">

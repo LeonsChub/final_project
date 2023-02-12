@@ -5,12 +5,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgb(0, 0, 0);
-  background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(164, 0, 108, 1) 100%
-  );
+  background-image: url("../../images/573903624428.jpg");
+  background-size: cover;
+  background-attachment: fixed;
 }
 .machineNav {
   height: 10%;
@@ -24,10 +21,11 @@
   align-items: center;
   justify-content: center;
   height: 10%;
-  width: 100%;
+  width: 40%;
   font-size: 250%;
   font-family: "Orbitron", sans-serif;
   color: rgb(255, 196, 0);
+  background-color: rgba(0, 0, 0, 0.41);
 }
 .machinesSpace {
   height: 60%;
@@ -81,7 +79,7 @@
   font-family: "Graduate", cursive;
 }
 .rollers {
-  background-color: rgb(151, 0, 131);
+  background-color: rgba(190, 1, 1, 0.729);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -253,7 +251,7 @@
 }
 .chipsWallet {
   height: 10%;
-  width: 50%;
+  width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -29,7 +29,7 @@
   justify-content: space-around;
   position: sticky;
   top: 0;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.321);
   z-index: 999;
 }
 .headerItems {
@@ -158,8 +158,15 @@
 .welcomeSpace {
   height: 100vh;
   width: 100%;
-  background: #fff url("../../images/bg2.jpg") center center/cover no-repeat
-    fixed;
+  background-image: url("../../images/573903624428.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  /* background: rgb(195, 25, 25);
+  background: radial-gradient(
+    circle,
+    rgba(195, 25, 25, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  ); */
   flex-direction: column;
   display: flex;
   align-items: center;
@@ -182,16 +189,16 @@
 }
 #welcomeHeader {
   height: 30%;
-  width: 60%;
+  width: 100%;
   font-size: 500%;
-  background-color: #0f1923dc;
+  background-color: #ff000071;
   border: 1.5px solid black;
   font-family: "Goldman", cursive;
   color: #b89105;
-  text-shadow: 5px 5px 5px rgb(93, 12, 12);
+  text-shadow: 5px 5px 5px rgb(104, 1, 54);
   border-radius: 10px;
   text-align: center;
-  box-shadow: 15px 10px 10px rgb(93, 12, 48);
+  box-shadow: 15px 10px 10px rgba(67, 0, 35, 0.652);
   -webkit-animation: slide-in-fwd-top 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
   animation: slide-in-fwd-top 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
 } /* ----------------------------------------------
@@ -303,7 +310,7 @@
   gap: 15%;
   border: none;
   border-radius: 15px;
-  background: #0f1923dc;
+  background: #ff000026;
   -webkit-animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1)
     both;
   animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
@@ -326,7 +333,7 @@
   gap: 15%;
   border: none;
   border-radius: 15px;
-  background: #0f1923dc;
+  background: #ff000026;
   -webkit-animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1)
     both;
   animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
@@ -409,11 +416,15 @@
   font-size: 180%;
   /* color: #000000; */
 }
+.form1 label{
+  color: #515151;
+
+}
 .f1Inputs {
   width: 50%;
   height: 100%;
   background-color: transparent;
-  color: rgb(255, 255, 255);
+  color: rgb(210, 210, 210);
   border-radius: 10px;
   border: none;
   border-bottom: 4px solid black;
