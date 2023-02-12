@@ -8,8 +8,6 @@ class Player {
     this.cards = [];
     this.score = [];
     this.fold = false;
-    this.ready = false;
-    this.allIn = false;
     this.specialAttrs = [];
     this.win = false;
   }
@@ -34,6 +32,41 @@ class Player {
     this.chips = this.chips - blind;
 
     return blind;
+  }
+  setFold() {
+    this.fold = true;
+  }
+  callBet() {
+    if (this.stakeGap) {
+      console.log("calling");
+      this.stake = this.stake + this.stakeGap;
+      this.chips = this.chips - this.stakeGap;
+      const toReturn = this.stakeGap;
+      this.stakeGap = 0;
+
+      return toReturn;
+    } else {
+      return 0;
+    }
+  }
+  raise(raise) {
+    if (raise > this.stakeGap) {
+      console.log("raising");
+      this.chips = parseInt(this.chips) - (parseInt(raise) - this.stake);
+      this.stake = parseInt(raise);
+      this.stakeGap = 0;
+
+      return parseInt(raise);
+    } else {
+      return 0;
+    }
+  }
+  updateGap(minimumBet) {
+    this.stakeGap = minimumBet - this.stake;
+  }
+  resetStake() {
+    this.stake = 0;
+    this.stakeGap = 0;
   }
 }
 
