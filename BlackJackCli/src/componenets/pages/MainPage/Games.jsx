@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { ScrollersContext, UserContext } from "../../../AppContext";
 import { useNavigate } from "react-router-dom";
 import { apiService } from "./../../../ApiService/ApiService";
+import CardComp from "../../CardComp";
 
 const Games = () => {
   const navigate = useNavigate();
