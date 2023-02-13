@@ -208,18 +208,26 @@ const Poker = () => {
         })}
       </div>
       <div className="pokerTable">
-        {/* {card1 ? ( */}
-        <>
-          <div className="myPlayingCard1 myPack">
-            <CardComp suit={"hearts"} value={6} />
-          </div>
-          <div className="myPlayingCard2 myPack">
-            <CardComp suit={"diamonds"} value={10} />
-          </div>
-        </>
-        {/* ) : ( */}
-        {/* <></> */}
-        {/* )} */}
+        {getMyOwnCards() ? (
+          <>
+            <div className="myPlayingCard1 myPack">
+              <CardComp
+                suit={getMyOwnCards()[0].suit}
+                value={getMyOwnCards()[0].value}
+                
+              />
+            </div>
+            <div className="myPlayingCard2 myPack">
+            <CardComp
+                suit={getMyOwnCards()[1].suit}
+                value={getMyOwnCards()[1].value}
+                
+              />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <div className="player2Card1 myPack c2-1">
           <Card suit={"back"} />
         </div>
@@ -519,6 +527,27 @@ const Poker = () => {
       console.log("finished handing cards getting data from server");
       socket.emit("init round");
     }
+  }
+
+  function getMyOwnCards() {
+    const decoded = jwt(token);
+    const myIndex = roomData.gameState.players.findIndex(
+      (p) => {
+        console.log(p.id)
+        console.log(decoded.user_id)
+        return p.id === decoded.user_id
+      }
+    );
+    if(myIndex > -1){
+      console.log(roomData.gameState.players[myIndex])
+      return roomData.gameState.players[myIndex].cards;
+
+    }
+
+    return [
+      {suit:'1000',value:'1000'},
+      {suit:'1000',value:'1000'}
+  ]
   }
 };
 export default Poker;
