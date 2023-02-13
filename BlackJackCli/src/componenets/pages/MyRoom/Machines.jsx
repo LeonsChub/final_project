@@ -85,7 +85,7 @@ const Machines = () => {
   return (
     <div className="machinesPage">
       <div className="machineNav">
-        <button onClick={() => navigate("/")} className="custom-btn btn-13">
+        <button onClick={() => navigate("/")} className="custom-btn btn-15">
           Leave Game
         </button>
       </div>

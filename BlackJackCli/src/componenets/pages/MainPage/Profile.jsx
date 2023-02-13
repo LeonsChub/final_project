@@ -21,10 +21,10 @@ const Profile = () => {
           </div>
         </div>
         <div className="stat">
-          <p>Roullete</p>
+          <p>Available Soon</p>
         </div>
         <div className="stat">
-          <p>Machines</p>
+          <p>Available Soon</p>
         </div>
       </div>
     </div>

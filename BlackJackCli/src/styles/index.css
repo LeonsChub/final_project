@@ -731,6 +731,12 @@
   align-items: center;
   justify-content: center;
 }
+#profileHeader{
+  font-size: 200%;
+  color: #a6882d;
+  font-family: "Russo One", sans-serif;
+
+}
 .stats {
   display: flex;
   flex-wrap: wrap;
@@ -754,6 +760,10 @@
   /* background-color: rgba(176, 0, 97, 0.858); */
   /* background-color: rgba(44, 176, 0, 0.858); */
   background-color: #6a6a6a6f;
+  color: #ff0000;
+  font-size: 200%;
+  font-family: "Russo One", sans-serif;
+
 }
 /* === Charts === */
 .chart1 {
