@@ -22,7 +22,7 @@
     rgba(0, 0, 0, 1) 100%
   );
   border-radius: 10em;
-  border: 10px solid rgb(32, 24, 24);
+  border: 10px solid rgb(30, 24, 24);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,7 +101,7 @@
 .pokerTable span {
   height: 16%;
   width: 10%;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   border-radius: 35%;
   background-color: rgb(0, 0, 0);
   position: absolute;
@@ -344,6 +344,67 @@
   bottom: 25%;
   left: 48.4%;
 }
+.playerChips1 {
+  position: absolute;
+  left: 47.2%;
+  bottom: 12%;
+  height: 15%;
+  width: 8%;
+}
+.playerChips2 {
+  position: absolute;
+  height: 15%;
+  width: 8%;
+  right: 25%;
+  bottom: 20%;
+  transform: rotate(-40deg);
+  z-index: 999;
+}
+.playerChips3 {
+  position: absolute;
+  right: 23%;
+  bottom: 43%;
+  height: 15%;
+  width: 8%;
+  z-index: 999;
+  transform: rotate(-90deg);
+}
+.playerChips4 {
+  position: absolute;
+  right: 27%;
+  top: 21%;
+  height: 15%;
+  width: 8%;
+  z-index: 999;
+  transform: rotate(-135deg);
+}
+.playerChips5 {
+  position: absolute;
+  left: 25%;
+  top: 24%;
+  height: 15%;
+  width: 8%;
+  z-index: 999;
+  transform: rotate(135deg);
+}
+.playerChips6 {
+  position: absolute;
+  left: 23%;
+  bottom: 38%;
+  height: 15%;
+  width: 8%;
+  z-index: 999;
+  transform: rotate(85deg);
+}
+.playerChips7 {
+  position: absolute;
+  height: 15%;
+  width: 8%;
+  left: 27%;
+  bottom: 16%;
+  transform: rotate(40deg);
+  z-index: 999;
+}
 #bet2 {
   position: absolute;
   bottom: 28.5%;
@@ -440,23 +501,25 @@
 .myPack {
   display: flex;
   position: absolute;
+  /* min-height: 0.5%; */
 }
 .myPlayingCard1 {
-  top: 20%;
+  width: 10%;
+  top: 30%;
+  left: 35%;
   background-color: white;
-  border: 1px solid black;
-  width: 30px;
+  border: 1px solid rgb(255, 217, 0);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
 }
 .myPlayingCard2 {
-  top: 20%;
+  width: 10%;
+  top: 30%;
+  right: 30%;
   background-color: white;
-  border: 1px solid black;
-  width: 30px;
+  border: 1px solid rgb(255, 217, 0);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,11 +527,9 @@
 }
 .player2Card1 {
   top: 20%;
-}
-.c2-1{
   transform: rotate(-45deg);
-
 }
+
 .player2Card2 {
   top: 20%;
   transform: rotate(-45deg);
@@ -519,4 +580,15 @@
   border: 2px solid black;
   border-radius: 10%;
   z-index: 999;
+}
+.cardContainer {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  /* font-size: 250%; */
+  /* font-weight: 700; */
+  width: 100%;
+  height: 100%;
+  /* background-color: white; */
 }

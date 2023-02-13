@@ -182,7 +182,7 @@
 }
 .btn-5B{
   background: #9f1111;
-  color: #c3c2c2;
+  color: #ffffff;
   line-height: 42px;
   padding: 0;
   border: none;
@@ -190,6 +190,7 @@
   width: 100%;
   font-family: "Orbitron", sans-serif;
   font-size: 100%;
+  border-radius: 5px;
 }
 .btn-5:hover {
   background: transparent;
@@ -200,7 +201,7 @@
 .btn-5B:hover {
   background: transparent;
   color: rgb(215, 169, 0);
-  box-shadow: -7px -7px 20px 0px rgb(255, 0, 0), -4px -4px 5px 0px rgb(255, 0, 0),
+  box-shadow: -7px -7px 20px 0px rgb(113, 0, 66), -4px -4px 5px 0px rgb(113, 0, 66),
     7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
 }
 .btn-5:before,
@@ -222,7 +223,7 @@
   right: 0;
   height: 2px;
   width: 0;
-  background: rgb(255, 0, 0);
+  background: rgb(113, 0, 66);
   transition: 400ms ease all;
 }
 .btn-5:after {
@@ -671,7 +672,7 @@
 /* 15 */
 .btn-15 {
   background: #000;
-  color: #ffffff;
+  color: #a07b02;
   z-index: 1;
   font-size: 150%;
   height: 90%;

@@ -4,6 +4,7 @@ import chipIMG from "../../../../images/chip2.png";
 import renderSlot from "./../../Slot";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../../AppContext";
+import Chips from "./../../Chips";
 
 const Machines = () => {
   const navigate = useNavigate();
@@ -18,9 +19,9 @@ const Machines = () => {
   const { chips, setChips, getChips, postChips } = useContext(UserContext);
 
   const handleRestults = () => {
-    if (bid===0){
-        alert('Cannot play without bidding')
-        return
+    if (bid === 0) {
+      alert("Cannot play without bidding");
+      return;
     }
     setChips(chips - bid);
     setAnimated1("slotAnimated1");
@@ -84,8 +85,8 @@ const Machines = () => {
   return (
     <div className="machinesPage">
       <div className="machineNav">
-        <button onClick={() => navigate("/")} className="custom-btn btn-13">
-          Leave game
+        <button onClick={() => navigate("/")} className="custom-btn btn-15">
+          Leave Game
         </button>
       </div>
       <div className="chipsWallet">

@@ -4,20 +4,21 @@ import heartImg from "../../images/heart.png";
 import diamondImg from "../../images/diamond.png";
 import clubImg from "../../images/club.png";
 import packageImg from "../../images/deck.webp";
+import renderCardCenter from "./CardCenter";
 
 const Card = ({ suit, value }) => {
   function renderSuite() {
     switch (suit) {
       case "spades":
-        return <img style={{ width: "30px" }} src={spadeImg} alt="" />;
+        return <img style={{ width: "25%" }} src={spadeImg} alt="" />;
 
       case "hearts":
-        return <img style={{ width: "30px" }} src={heartImg} alt="" />;
+        return <img style={{ width: "25%" }} src={heartImg} alt="" />;
 
       case "diamonds":
-        return <img style={{ width: "10px" }} src={diamondImg} alt="" />;
+        return <img style={{ width: "25%" }} src={diamondImg} alt="" />;
       case "clubs":
-        return <img style={{ width: "30px" }} src={clubImg} alt="" />;
+        return <img style={{ width: "25%" }} src={clubImg} alt="" />;
       case "back":
         return (
           <img
@@ -33,27 +34,20 @@ const Card = ({ suit, value }) => {
   }
   return (
     <div
+      className="cardContainer"
       style={{
-        width: "100%",
-        height: "100%",
-        // backgroundColor: "white",
-        // border: "1px solid black",
-        textAlign: "center",
-        display: "flex",
-        flexDirection:'column',
-        zIndex: "999",
+        color: suit === "hearts" || suit === "diamonds" ? "red" : "black",
       }}
     >
-      <div
-        style={{
-          fontSize: "20px",
-          fontWeight: "bold",
-          color: suit === "hearts" || suit === "diamonds" ? "red" : "black",
-        }}
-      >
-        {value}
+      <div className="cardTop">
+        <span className="cardValue1">{value}</span>
+        <div className="cardSuit1">{renderSuite()}</div>
       </div>
-      <div>{renderSuite()}</div>
+      <div>{renderCardCenter(value, renderSuite)}</div>
+      <div className="cardBottom">
+        <div className="cardSuit2">{renderSuite()}</div>
+      <span className="cardValue2">{value}</span>
+      </div>
     </div>
   );
 };

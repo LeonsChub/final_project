@@ -2,84 +2,37 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import MySlider from "./TableComps/Slider";
 import "./style/poker.css";
 import { useNavigate } from "react-router-dom";
-import {
-  RoomContext,
-  SocketContext,
-  UserContext,
-} from "../../../AppContext";
+import { RoomContext, SocketContext, UserContext } from "../../../AppContext";
 import jwt from "jwt-decode";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Card from "./../../Card";
 import packageImg from "../../../../images/deck.webp";
-import gsap from "gsap";
-import Chips from "../../Chips";
 import "./../../../styles/btns.css";
+import cardAnimation from "./Animation/cardAnimation";
+import CardComp from "../../CardComp";
+import Chips from "../../Chips";
 
 const Poker = () => {
   const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
   const socket = useContext(SocketContext);
   const { token, myProfile } = useContext(UserContext);
   const { user_id } = jwt(token);
-
   const mountRef = useRef(false);
   const gotCardsRef = useRef(false);
-
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     myProfile();
-    // if (gameStarted) {
-    gsap.to(".myPlayingCard1", { y: 290, x: 20, duration: 1.5 });
-    setTimeout(() => {
-      gsap.to(".player2Card1", { y: 255, x: 305, duration: 1.5 });
-    }, 6500);
-    setTimeout(() => {
-      gsap.to(".player3Card1", { y: 95, x: 345, duration: 1.5 });
-    }, 6000);
-    setTimeout(() => {
-      gsap.to(".player4Card1", { y: -70, x: 300, duration: 1.5 });
-    }, 5500);
-    setTimeout(() => {
-      gsap.to(".player5Card1", { y: -70, x: -300, duration: 1.5 });
-    }, 5000);
-    setTimeout(() => {
-      gsap.to(".player6Card1", { y: 95, x: -345, duration: 1.5 });
-    }, 4500);
-    setTimeout(() => {
-      gsap.to(".player7Card1", { y: 235, x: -310, duration: 1.5 });
-    }, 4000);
-    setTimeout(() => {
-      gsap.to(".myPlayingCard2", { y: 290, x: -20, duration: 1.5 });
-    }, 3500);
-    setTimeout(() => {
-      gsap.to(".player2Card2", { y: 235, x: 310, duration: 1.5 });
-    }, 3000);
-    setTimeout(() => {
-      gsap.to(".player3Card2", { y: 110, x: 350, duration: 1.5 });
-    }, 2500);
-    setTimeout(() => {
-      gsap.to(".player4Card2", { y: -60, x: 300, duration: 1.5 });
-    }, 2000);
-    setTimeout(() => {
-      gsap.to(".player5Card2", { y: -60, x: -300, duration: 1.5 });
-    }, 1500);
-    setTimeout(() => {
-      gsap.to(".player6Card2", { y: 110, x: -350, duration: 1.5 });
-    }, 1000);
-    setTimeout(() => {
-      gsap.to(".player7Card2", { y: 255, x: -305, duration: 1.5 });
-    }, 500);
-    // }
   }, [gameStarted]);
   const [raise, setRaise] = useState(false);
   const [raiseBet, setRaiseBet] = useState(undefined);
   const [clockKey, setClockKey] = useState(0);
-  const [currentBet, setCurrentBet] = useState(0);
+  // const [currentBet, setCurrentBet] = useState(0);
 
   useEffect(() => {
     initListeners();
-
+    console.log('WHAT DAY OIS IT TODAT',roomData.gameState.gameStage.length > 0)
     return () => {
       if (mountRef.current) {
         socket.emit("leave room", {
@@ -244,75 +197,138 @@ const Poker = () => {
       <div>
         {reorderCenter(roomData.sockData.players).map((p, index) => {
           return bets(index + 1, p.id);
-
+        })}
+      </div>
+      <div>
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
+          return chips(index + 1, p.id);
         })}
       </div>
       <div className="pokerTable">
-        <div className="myPlayingCard1 myPack">
-          <Card suit={"diamonds"} value={"1"} />
-        </div>
-        <div className="myPlayingCard2 myPack">
-          <Card suit={"diamonds"} value={"1"} />
-        </div>
-        <div className="player2Card1 myPack c2-1">
-          <Card suit={"back"} />
-        </div>
-        <div className="player2Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player3Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player3Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player4Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player4Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player5Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player5Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player6Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player6Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player7Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player7Card2 myPack">
-          <Card suit={"back"} />
-        </div>
+        {getMyOwnCards() ? (
+          <>
+            <div className="myPlayingCard1 myPack">
+              <CardComp
+                suit={getMyOwnCards()[0].suit}
+                value={getMyOwnCards()[0].value}
+              />
+            </div>
+            <div className="myPlayingCard2 myPack">
+              <CardComp
+                suit={getMyOwnCards()[1].suit}
+                value={getMyOwnCards()[1].value}
+              />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        {1===1 ? (
+          <>
+            <div className="player2Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player2Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player3Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player3Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player4Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player4Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player5Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player5Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player6Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player6Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player7Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player7Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <span id="dealerSeat">Dealer</span>;
         {reorderCenter(roomData.sockData.players).map((p, index) => {
           return seats(index + 1);
         })}
         {reorderCenter(roomData.sockData.players).map((p, index) => {
-
-
           return moneys(index + 1, p.id);
-
         })}
         <div className="package">
           <img id="packageImg" src={packageImg} alt="package IMG" />
         </div>
         <div className="tableCenter">
           <div id="flopPlace"></div>
-          <div id="c1Place"></div>
-          <div id="c2Place"></div>
-          <div id="c3Place"></div>
-          <div id="c4Place"></div>
-          <div id="c5Place"></div>
+          <div id="c1Place">
+            {roomData.gameState.community[0] ? (
+              <CardComp
+                value={roomData.gameState.community[0].value}
+                suit={roomData.gameState.community[0].suit}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="c2Place">
+            {roomData.gameState.community[1] ? (
+              <CardComp
+                value={roomData.gameState.community[1].value}
+                suit={roomData.gameState.community[1].suit}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="c3Place">
+            {roomData.gameState.community[2] ? (
+              <CardComp
+                value={roomData.gameState.community[2].value}
+                suit={roomData.gameState.community[2].suit}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="c4Place">
+            {roomData.gameState.community[3] ? (
+              <CardComp
+                value={roomData.gameState.community[3].value}
+                suit={roomData.gameState.community[3].suit}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div id="c5Place">
+            {roomData.gameState.community[4] ? (
+              <CardComp
+                value={roomData.gameState.community[4].value}
+                suit={roomData.gameState.community[4].suit}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
       </div>
-
       <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
         POT :{roomData.gameState.pot}
       </h1>
@@ -330,14 +346,26 @@ const Poker = () => {
     })[0];
     playerBet = playerBet ? playerBet["stake"] : "";
     return (
-      <p className="bets" id={`bet${i}`}>
-        {playerBet}
-      </p>
+      <div>
+        <p id={`bet${i}`} className="bets">
+          {playerBet}
+        </p>
+      </div>
+    );
+  }
+  function chips(i, playerId) {
+    let playerData = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    const chips = playerData ? playerData.chips : <></>;
+    return (
+      <div className={`playerChips${i}`}>
+        <Chips value={1000} />
+      </div>
     );
   }
   function seats(i) {
     const player = reorderCenter(roomData.sockData.players)[i - 1];
-
 
     return (
       <span id={`seat${i}`} style={{ color: "white" }}>
@@ -357,7 +385,6 @@ const Poker = () => {
         )}
       </span>
     );
-
   }
   function moneys(i, playerId) {
     return (
@@ -368,12 +395,25 @@ const Poker = () => {
   }
   function initListeners() {
     socket.on("handing cards", (data) => {
-
+      console.log("RUN ANIMATION FOR EACH PLAYER");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
         return oldState;
       });
+      // setCard1(
+      //   roomData.gameState.players.filter((player) => {
+      //     return player.id === user_id;
+      //   })[0].cards[0]
+      // );
+      // setCard2(
+      //   roomData.gameState.players.filter((player) => {
+      //     return player.id === user_id;
+      //   })[0].cards[1]
+      // );
+      // console.log(card1)
+      // console.log(card2)
+      cardAnimation(roomData.sockData.players, reorderCenter);
     });
 
     socket.on("update gamestate", (data) => {
@@ -416,10 +456,8 @@ const Poker = () => {
       });
     });
 
-
     socket.on("ready check", () => {
       socket.emit("ready check ack", { roomId: roomData.sockData.roomId });
-
     });
 
     window.addEventListener("beforeunload", function (e) {
@@ -478,7 +516,6 @@ const Poker = () => {
     return reordered;
   }
 
-
   function sleep(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
@@ -493,5 +530,22 @@ const Poker = () => {
     }
   }
 
+  function getMyOwnCards() {
+    const decoded = jwt(token);
+    const myIndex = roomData.gameState.players.findIndex((p) => {
+      console.log(p.id);
+      console.log(decoded.user_id);
+      return p.id === decoded.user_id;
+    });
+    if (myIndex > -1) {
+      console.log(roomData.gameState.players[myIndex]);
+      return roomData.gameState.players[myIndex].cards;
+    }
+
+    return [
+      { suit: "1000", value: "1000" },
+      { suit: "1000", value: "1000" },
+    ];
+  }
 };
 export default Poker;
