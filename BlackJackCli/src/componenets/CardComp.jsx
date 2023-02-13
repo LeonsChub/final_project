@@ -52,7 +52,7 @@ import H10 from "../../images/cards/TH.svg";
 import HJ from "../../images/cards/JH.svg";
 import HQ from "../../images/cards/QH.svg";
 import HK from "../../images/cards/KH.svg";
-import "./card.css";
+import "./pages/MyRoom/style/poker.css";
 const CardComp = ({ suit, value }) => {
   console.log(value);
   console.log(suit);
@@ -250,7 +250,7 @@ const CardComp = ({ suit, value }) => {
     myCard = HJ;
   }
   return (
-    <div className="cardContainer">
+    <div className="cardContainer1">
       <img style={{ width: "100%" }} src={myCard} alt="cardImg" />
     </div>
   );

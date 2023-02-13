@@ -18,6 +18,7 @@ function AppContext({ children }) {
   const [token, setToken] = useState();
   const [user, setUser] = useState();
   const [chips, setChips] = useState();
+  const [dailyGame, setDailyGame] = useState(true);
 
   const myProfile = () => {
     const myToken = localStorage.getItem("token");
@@ -30,7 +31,17 @@ function AppContext({ children }) {
       return;
     }
   };
-
+  const getDailyGame = () => {
+    const date = new Date();
+    apiService.getDailyGame().then((res) => {
+      if (res == date.getDay()+1) {
+        setDailyGame(false);
+      }
+    });
+  };
+  const postDailyGame = (num) => {
+    apiService.postDailyGame(num).then(setDailyGame(false));
+  };
   const getChips = () => {
     apiService.getChips().then((res) => setChips(res));
   };
@@ -92,7 +103,19 @@ function AppContext({ children }) {
   return (
     <SocketContext.Provider value={socket}>
       <UserContext.Provider
-        value={{ user, token, myProfile, chips, setChips, getChips, postChips }}
+        value={{
+          user,
+          token,
+          myProfile,
+          chips,
+          setChips,
+          getChips,
+          postChips,
+          getDailyGame,
+          postDailyGame,
+          dailyGame,
+          setDailyGame,
+        }}
       >
         <RoomContext.Provider value={[roomData, setRoomData, blankGameState]}>
           <ScrollersContext.Provider

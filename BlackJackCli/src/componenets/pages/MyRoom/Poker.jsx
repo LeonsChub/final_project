@@ -19,9 +19,6 @@ const Poker = () => {
   const { user_id } = jwt(token);
   const mountRef = useRef(false);
   const gotCardsRef = useRef(false);
-  const [card1, setCard1] = useState();
-  const [card2, setCard2] = useState();
-
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -35,7 +32,7 @@ const Poker = () => {
 
   useEffect(() => {
     initListeners();
-
+    console.log('WHAT DAY OIS IT TODAT',roomData.gameState.gameStage.length > 0)
     return () => {
       if (mountRef.current) {
         socket.emit("leave room", {
@@ -214,56 +211,60 @@ const Poker = () => {
               <CardComp
                 suit={getMyOwnCards()[0].suit}
                 value={getMyOwnCards()[0].value}
-                
               />
             </div>
             <div className="myPlayingCard2 myPack">
-            <CardComp
+              <CardComp
                 suit={getMyOwnCards()[1].suit}
                 value={getMyOwnCards()[1].value}
-                
               />
             </div>
           </>
         ) : (
           <></>
         )}
-        <div className="player2Card1 myPack c2-1">
-          <Card suit={"back"} />
-        </div>
-        <div className="player2Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player3Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player3Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player4Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player4Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player5Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player5Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player6Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player6Card2 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player7Card1 myPack">
-          <Card suit={"back"} />
-        </div>
-        <div className="player7Card2 myPack">
-          <Card suit={"back"} />
-        </div>
+        {1===1 ? (
+          <>
+            <div className="player2Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player2Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player3Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player3Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player4Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player4Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player5Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player5Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player6Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player6Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player7Card1 myPack">
+              <Card suit={"back"} />
+            </div>
+            <div className="player7Card2 myPack">
+              <Card suit={"back"} />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <span id="dealerSeat">Dealer</span>;
         {reorderCenter(roomData.sockData.players).map((p, index) => {
           return seats(index + 1);
@@ -531,23 +532,20 @@ const Poker = () => {
 
   function getMyOwnCards() {
     const decoded = jwt(token);
-    const myIndex = roomData.gameState.players.findIndex(
-      (p) => {
-        console.log(p.id)
-        console.log(decoded.user_id)
-        return p.id === decoded.user_id
-      }
-    );
-    if(myIndex > -1){
-      console.log(roomData.gameState.players[myIndex])
+    const myIndex = roomData.gameState.players.findIndex((p) => {
+      console.log(p.id);
+      console.log(decoded.user_id);
+      return p.id === decoded.user_id;
+    });
+    if (myIndex > -1) {
+      console.log(roomData.gameState.players[myIndex]);
       return roomData.gameState.players[myIndex].cards;
-
     }
 
     return [
-      {suit:'1000',value:'1000'},
-      {suit:'1000',value:'1000'}
-  ]
+      { suit: "1000", value: "1000" },
+      { suit: "1000", value: "1000" },
+    ];
   }
 };
 export default Poker;

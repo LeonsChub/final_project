@@ -13,6 +13,8 @@ import Rooms from "./componenets/pages/RoomBrowser/Rooms";
 import Poker from "../src/componenets/pages/MyRoom/Poker";
 import Signup from './componenets/pages/Signup';
 import Machines from './componenets/pages/MyRoom/Machines';
+import HTPPoker from './componenets/HTPPoker';
+import HTPSlot from './componenets/HTPSlot';
 
 function App() {
   const socket = useContext(SocketContext);
@@ -57,6 +59,8 @@ function App() {
         <Route path="/machines" element={<Machines />} />
         <Route path="/poker" element={<Poker />} />
         <Route path="myRoom/:id" element={<MyRoom />} />
+        <Route path="htppoker" element={<HTPPoker />} />
+        <Route path="htpslot" element={<HTPSlot />} />
       </Routes>
     </div>
   );

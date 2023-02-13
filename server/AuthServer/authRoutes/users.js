@@ -1,5 +1,5 @@
 const express = require("express");
-const verifyUser = require('../../middlewares/verifyUser')
+const verifyUser = require("../../middlewares/verifyUser");
 const router = express.Router();
 require("dotenv").config();
 const User = require("../Models/User");
@@ -28,6 +28,7 @@ router.post("/register", async (req, res) => {
         email: email.toLowerCase(),
         password: hash,
         chips: 5000,
+        daily_game: 0,
       });
 
       const token = jwt.sign(
@@ -98,6 +99,28 @@ router.post("/chips", async (req, res) => {
     res.status(200).json(results.chips);
   } catch (e) {
     console.log(1);
+    res.status(400).send(e);
+  }
+});
+
+router.get("/dailygame/:id", async (req, res) => {
+  try {
+    const user_id = req.params.id;
+    const { daily_game } = await User.findById(user_id);
+    res.status(200).json(daily_game);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+router.post("/dailygame/:id", async (req, res) => {
+  try {
+    const body = req.body;
+    const user_id = req.params.id;
+    console.log(body);
+    const results = await User.findByIdAndUpdate(user_id, body);
+    console.log(results);
+    res.status(200).json(results.daily_game);
+  } catch (e) {
     res.status(400).send(e);
   }
 });

@@ -11,13 +11,20 @@ const Games = () => {
   const [drop2, setDrop2] = useState("dropClosed");
   const [drop3, setDrop3] = useState("dropClosed");
   const [picked, setPicked] = useState(false);
-  const [dailyGame, setDailyGame] = useState(true);
-  const [dailyResult, setDailyResult] = useState("");
-  const [daily1, setDaily1] = useState(1000);
-  const [daily2, setDaily2] = useState(1000);
-  const [daily3, setDaily3] = useState(1000);
-  const { user, myProfile, setChips, chips, getChips } =
-    useContext(UserContext);
+  const [dailyResult, setDailyResult] = useState(
+    "You played your daily game, visit again tommorrow for another chance"
+  );
+  const {
+    user,
+    myProfile,
+    setChips,
+    chips,
+    getChips,
+    postChips,
+    getDailyGame,
+    postDailyGame,
+    dailyGame,
+  } = useContext(UserContext);
   const { gamesRef } = useContext(ScrollersContext);
   const handleDrop = (x) => {
     if (x == 1) {
@@ -54,21 +61,26 @@ const Games = () => {
     });
   }
   const handleDailyGame = async (num) => {
-    console.log(num)
+    let date = new Date();
     setPicked(true);
     if (num == 1) {
       setDailyResult("You won 1000 CHIPS!, Visit again tommorow...");
-      await sleep(3000);
-      setDailyGame(false);
+      postChips(chips + 1000);
+      await sleep(1000);
+      postDailyGame(date.getDay() + 1);
+      getDailyGame();
     } else {
       setDailyResult(`Close but no cigar - Try again tommorow! `);
       await sleep(3000);
-      setDailyGame(false);
+      postDailyGame(date.getDay() + 1);
+      getDailyGame();
     }
+    console.log(dailyGame + "Available");
   };
   useEffect(() => {
     myProfile();
     getChips();
+    getDailyGame();
   }, []);
 
   return (
@@ -84,7 +96,7 @@ const Games = () => {
         <div className="card">
           <div className="middleCard">
             <button onClick={() => handleDrop(3)} className="custom-btn btn-5B">
-              Machines
+              Slots
             </button>
           </div>
         </div>
@@ -149,7 +161,7 @@ const Games = () => {
         </div>
       ) : (
         <div className="dailyGameSpace">
-          <h2 className="dailyTitle">{dailyResult}</h2>
+          <h2 className="dailyResTitle">{dailyResult}</h2>
         </div>
       )}
       <div className="dropDowns">
@@ -163,7 +175,12 @@ const Games = () => {
           >
             Play Game
           </button>
-          <button className="custom-btn btn-10">How To Play?</button>
+          <button
+            onClick={() => navigate("/htppoker")}
+            className="custom-btn btn-10"
+          >
+            How To Play?
+          </button>
         </div>
         <div
           style={{ left: "16%", top: "65%" }}
@@ -175,7 +192,12 @@ const Games = () => {
           >
             Play Game
           </button>
-          <button className="custom-btn btn-10">How To Play?</button>
+          <button
+            onClick={() => navigate("/htpslot")}
+            className="custom-btn btn-10"
+          >
+            How To Play?
+          </button>
         </div>
       </div>
     </div>
