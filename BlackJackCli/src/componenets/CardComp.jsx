@@ -1,4 +1,5 @@
 import React from "react";
+import B1 from "../../images/cards/1B.svg";
 import D1 from "../../images/cards/AD.svg";
 import D2 from "../../images/cards/2D.svg";
 import D3 from "../../images/cards/3D.svg";
@@ -236,9 +237,21 @@ const CardComp = ({ suit, value }) => {
         break;
     }
   }
+  if (suit == 1000) {
+    myCard = B1;
+  }
+  if (suit == 100) {
+    myCard = HK;
+  }
+  if (suit == 200) {
+    myCard = HQ;
+  }
+  if (suit == 300) {
+    myCard = HJ;
+  }
   return (
     <div className="cardContainer">
-      <img style={{width:'100%'}} src={myCard} alt="cardImg" />
+      <img style={{ width: "100%" }} src={myCard} alt="cardImg" />
     </div>
   );
 };

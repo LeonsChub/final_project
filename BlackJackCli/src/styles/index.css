@@ -416,9 +416,8 @@
   font-size: 180%;
   /* color: #000000; */
 }
-.form1 label{
+.form1 label {
   color: #515151;
-
 }
 .f1Inputs {
   width: 50%;
@@ -493,7 +492,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 }
 .cards {
   display: flex;
@@ -571,7 +570,48 @@
     opacity: 1;
   }
 }
-
+.dailyGameSpace {
+  height: 100%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 10%;
+  top: 20%;
+}
+.dailyGameContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 60%;
+  width: 100%;
+}
+.dailyTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 200%;
+  color: rgb(220, 187, 0);
+  height: 15%;
+}
+.dailySecTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgb(220, 187, 0);
+  font-size: 125%;
+}
+.dailyCard {
+  width: 15%;
+  border: 1px solid rgb(65, 65, 65); ;
+  border-radius: 5%;
+  cursor: pointer;
+}
+.dailyCard:hover{
+  border:3px solid rgb(255, 0, 0)
+}
 .play {
   border: 3px solid green;
   width: 60%;
@@ -857,7 +897,7 @@
 }
 /* === CHIPS === */
 .chipsCollection {
-  height: 50%;
+  height: 100%;
   width: 50%;
   background-color: transparent;
   display: flex;
@@ -865,10 +905,11 @@
   justify-content: center;
   /* gap: %; */
   z-index: 999;
+  /* position: absolute; */
 }
 .cont {
   height: 100%;
-  width: 100%;
+  width: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -876,17 +917,17 @@
 }
 .whites {
   height: 100%;
-  width: 100%;
+  width: 50%;
   background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   z-index: 999;
 }
 .white {
-  height: 10%;
-  width: 10%;
+  height: 20%;
+  width: 20%;
   background-color: #242424;
   border-radius: 50%;
   transform: rotate(3deg);

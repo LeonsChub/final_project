@@ -2,23 +2,24 @@ import React from "react";
 
 const Chips = ({ value }) => {
   function renderChips(value) {
-    switch (value) {
-      case value % 10 < 1:
+    switch (true) {
+      case value <= 10:
         return "white";
-      case value % 100 < 1:
+      case value <= 100:
         return "whiteBlue";
-      case value % 1000 < 1:
+      case value <= 1000:
         return "whiteBlueGreen";
-      case value % 10000 < 1:
+      case value <= 10000:
         return "whiteBlueGreenRed";
-      case value % 100000 < 1:
+      case value <= 100000:
         return "whiteBlueGreenRedBlack";
-
       default:
         break;
     }
   }
-  switch (() => renderChips(value)) {
+  
+  console.log(renderChips(value))
+  switch (renderChips(value)) {
     case "white":
       return (
         <div className="cont">

@@ -10,6 +10,7 @@ import packageImg from "../../../../images/deck.webp";
 import "./../../../styles/btns.css";
 import cardAnimation from "./Animation/cardAnimation";
 import CardComp from "../../CardComp";
+import Chips from "../../Chips";
 
 const Poker = () => {
   const [roomData, setRoomData, blankGameState] = useContext(RoomContext);
@@ -201,6 +202,11 @@ const Poker = () => {
           return bets(index + 1, p.id);
         })}
       </div>
+      <div>
+        {reorderCenter(roomData.sockData.players).map((p, index) => {
+          return chips(index + 1, p.id);
+        })}
+      </div>
       <div className="pokerTable">
         {/* {card1 ? ( */}
         <>
@@ -314,7 +320,6 @@ const Poker = () => {
           </div>
         </div>
       </div>
-
       <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
         POT :{roomData.gameState.pot}
       </h1>
@@ -332,9 +337,22 @@ const Poker = () => {
     })[0];
     playerBet = playerBet ? playerBet["stake"] : "";
     return (
-      <p className="bets" id={`bet${i}`}>
-        {playerBet}
-      </p>
+      <div>
+        <p id={`bet${i}`} className="bets">
+          {playerBet}
+        </p>
+      </div>
+    );
+  }
+  function chips(i, playerId) {
+    let playerData = roomData.gameState.players.filter((player) => {
+      return player.id === playerId;
+    })[0];
+    const chips = playerData ? playerData.chips : <></>;
+    return (
+      <div className={`playerChips${i}`}>
+        <Chips value={1000} />
+      </div>
     );
   }
   function seats(i) {

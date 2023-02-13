@@ -261,6 +261,10 @@
   border: 2px solid rgb(174, 61, 0);
   background-color: rgb(88, 26, 12);
 }
+.chipsPaint{
+  height: 100%;
+  width: 40%;
+}
 #walletImg {
   height: 50%;
 }
