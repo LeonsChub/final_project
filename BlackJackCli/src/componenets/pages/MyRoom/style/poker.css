@@ -97,6 +97,7 @@
   display: flex;
   height: 100%;
   width: 100%;
+
 }
 .pokerTable span {
   height: 16%;
@@ -110,7 +111,7 @@
   bottom: -24%;
   text-align: center;
   color: rgba(66, 66, 66, 0);
-  font-size: 1%;
+  font-size: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,19 +129,27 @@
   bottom: -11%;
   right: -8%;
   transform: rotate(135deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  
 }
 #seat3 {
   right: -15%;
   transform: rotate(90deg);
-  text-align: center;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;}
 #seat4 {
   top: -11%;
   right: -8%;
   transform: rotate(45deg);
-  text-align: center;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;}
 #dealerSeat {
   top: -24%;
   background-color: rgb(0, 0, 0);
@@ -157,19 +166,25 @@
   top: -11%;
   left: -8%;
   transform: rotate(135deg);
-  text-align: center;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;}
 #seat6 {
   left: -15%;
   transform: rotate(90deg);
-  text-align: center;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;}
 #seat7 {
   bottom: -11%;
   left: -8%;
   transform: rotate(45deg);
-  text-align: center;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;}
 .moneys {
   height: 9%;
   width: 6%;
@@ -501,7 +516,7 @@
 .myPack {
   display: flex;
   position: absolute;
-  /* min-height: 0.5%; */
+  /* height: 0.5%; */
 }
 .myPlayingCard1 {
   width: 10%;
