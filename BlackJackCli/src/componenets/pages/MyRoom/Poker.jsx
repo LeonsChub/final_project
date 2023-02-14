@@ -60,7 +60,7 @@ const Poker = () => {
 
   useEffect(() => {
     if (roomData.gameState.gameStage === "showdown") {
-      alert("wow u all won cause we didnt calculate the winner function");
+      alert("Winner winner chicken dinner!");
     }
   }, [roomData]);
 
