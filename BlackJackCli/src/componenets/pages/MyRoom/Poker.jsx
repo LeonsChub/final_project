@@ -120,6 +120,7 @@ const Poker = () => {
       </div>
       <div className="leftSide">
         <button
+        className="custom-btn btn-15B"
           onClick={() => {
             navigate("/");
             socket.emit("leave room");
@@ -141,10 +142,11 @@ const Poker = () => {
         ) : (
           <div>
             <button
+            className="custom-btn btn-11"
               onClick={(e) => startingGame(e)}
               disabled={roomData.sockData.players.length < 2}
             >
-              Start game {roomData.sockData.players.length}/2
+              Start game {roomData.sockData.players.length}/7
             </button>
           </div>
         )}
@@ -333,7 +335,7 @@ const Poker = () => {
           </div>
         </div>
       </div>
-      <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
+      {/* <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
         POT :{roomData.gameState.pot}
       </h1>
       <h1 style={{ position: "absolute", top: "15%", right: "5%" }}>
@@ -341,7 +343,7 @@ const Poker = () => {
       </h1>
       <h1 style={{ position: "absolute", top: "5%", right: "40%" }}>
         {roomData.gameState.gameStage}
-      </h1>
+      </h1> */}
     </div>
   );
   function bets(i, playerId) {
