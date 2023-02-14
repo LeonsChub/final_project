@@ -26,13 +26,13 @@ const Poker = () => {
     myProfile();
   }, [gameStarted]);
   const [raise, setRaise] = useState(false);
+  const [newGame, setNewGame] = useState(false);
   const [raiseBet, setRaiseBet] = useState(undefined);
   const [clockKey, setClockKey] = useState(0);
   // const [currentBet, setCurrentBet] = useState(0);
 
   useEffect(() => {
     initListeners();
-    console.log('WHAT DAY OIS IT TODAT',roomData.gameState.gameStage.length > 0)
     return () => {
       if (mountRef.current) {
         socket.emit("leave room", {
@@ -205,7 +205,9 @@ const Poker = () => {
         })}
       </div>
       <div className="pokerTable">
-        {getMyOwnCards() ? (
+
+        {newGame ? (
+
           <>
             <div className="myPlayingCard1 myPack">
               <CardComp
@@ -223,7 +225,8 @@ const Poker = () => {
         ) : (
           <></>
         )}
-        {1===1 ? (
+
+        {newGame ? (
           <>
             <div className="player2Card1 myPack">
               <Card suit={"back"} />
@@ -413,7 +416,11 @@ const Poker = () => {
       // );
       // console.log(card1)
       // console.log(card2)
+
+      setNewGame(true);
+      setTimeout(() => {
       cardAnimation(roomData.sockData.players, reorderCenter);
+      }, 1000);
     });
 
     socket.on("update gamestate", (data) => {

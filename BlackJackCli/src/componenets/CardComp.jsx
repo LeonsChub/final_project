@@ -54,12 +54,11 @@ import HQ from "../../images/cards/QH.svg";
 import HK from "../../images/cards/KH.svg";
 import "./pages/MyRoom/style/poker.css";
 const CardComp = ({ suit, value }) => {
-  console.log(value);
-  console.log(suit);
+
   let myCard = "";
   if (suit == "diamonds") {
     switch (value) {
-      case 1:
+      case 'A':
         myCard = D1;
         break;
       case 2:
@@ -104,7 +103,8 @@ const CardComp = ({ suit, value }) => {
   }
   if (suit == "spades") {
     switch (value) {
-      case 1:
+
+      case 'A':
         myCard = S1;
         break;
       case 2:
@@ -149,7 +149,8 @@ const CardComp = ({ suit, value }) => {
   }
   if (suit == "clubs") {
     switch (value) {
-      case 1:
+
+      case 'A':
         myCard = C1;
         break;
       case 2:
@@ -194,7 +195,8 @@ const CardComp = ({ suit, value }) => {
   }
   if (suit == "hearts") {
     switch (value) {
-      case 1:
+
+      case 'A':
         myCard = H1;
         break;
       case 2:
