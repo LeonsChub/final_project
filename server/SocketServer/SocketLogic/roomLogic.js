@@ -68,10 +68,10 @@ function socketListenCreateRoom(socket, io) {
           io.to(socket.id).emit("create failed", { msg: "room name taken" });
         }
       } else {
-        console.log("INVALID DATA PROVIDED");
+        // console.log("INVALID DATA PROVIDED");
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      // console.log("NO DATA PROVIDED");
     }
   });
 }
@@ -100,7 +100,7 @@ function socketListenJoinRoom(socket, io) {
         }
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      // console.log("NO DATA PROVIDED");
     }
   });
 }
@@ -123,7 +123,7 @@ function socketListenLeaveRoom(socket, io) {
         console.log("leaving");
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      console.log("NO DATA PROVIDED on leaving room");
     }
   });
 }

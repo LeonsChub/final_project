@@ -152,7 +152,7 @@ const pokerRef = (socket, io, roomId) => {
     gameState.deck = shuffleDeck(initDeck())
     gameState.blind = gameState.blind * 2;
     gameState.gameStage = "";
-    gameState.minimumBet = 0
+    gameState.minimumBet = gameState.blind * 2
     gameState.playerBets = {}
     gameState.roundInfo = {
       activePlayer: "",
@@ -175,6 +175,8 @@ const pokerRef = (socket, io, roomId) => {
 
         const { sbIndex, bbIndex } = gameState.roundInfo;
 
+        console.log("small", sbIndex, "big", bbIndex)
+
         addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
         addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
 
@@ -191,8 +193,8 @@ const pokerRef = (socket, io, roomId) => {
     });
     socket.on("bet placed", (data) => {
       const decoded = authToken(data.auth);
+      console.log(socket.id, 'folded')
       if (decoded) {
-        console.log("a bet has been placed");
         const playerIndex = gameState.players.findIndex(
           (p) => p.id === decoded.user_id
         );
@@ -251,8 +253,11 @@ const pokerRef = (socket, io, roomId) => {
     });
 
     socket.on("leave room", () => {
+      sockets = sockets.filter(sock => sock.id !== socket.id)
       socket.off("bet placed", () => { });
       socket.off("init round", () => { });
+
+      console.log('listening to num of sockets', sockets.length)
     });
   }
 
@@ -277,11 +282,22 @@ const pokerRef = (socket, io, roomId) => {
 
   let gaveCards = false;
 
-
+  let sockets = [socket];
   initListeners(socket);
 
+  function joinSocket(socket) {
+    const alreadyListening = sockets.filter(sock => {
+      return sock.id === socket.id
+    }).length > 0
 
-  return initListeners;
+    if (!alreadyListening) {
+      sockets.push(socket)
+      initListeners(socket)
+    }
+  }
+
+
+  return joinSocket;
 };
 
 // ------------------------Helper functions------------------------------

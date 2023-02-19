@@ -168,12 +168,12 @@ const Poker = () => {
       <div className="leftSide">
         <button
           onClick={() => {
+            console.log('leaving room clicked buttinb')
             socket.emit("bet placed", {
               auth: token,
               bet: { type: "fold" },
             });
             navigate("/");
-            socket.emit("leave room");
             setRoomData((prev) => {
               const oldState = { ...prev };
               oldState.gameState = blankGameState();
