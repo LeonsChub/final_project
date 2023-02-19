@@ -107,7 +107,7 @@ const Poker = () => {
 
   useEffect(() => {
     if (roomData.gameState.gameStage === "showdown") {
-      alert("wow u all won cause we didnt calculate the winner function");
+      // alert("wow u all won cause we didnt calculate the winner function");
     }
   }, [roomData]);
 
@@ -138,7 +138,7 @@ const Poker = () => {
               value={raiseBet}
               setValue={setRaiseBet}
               myChips={getPlayerChips(user_id)}
-              currentBet={roomData.gameState.minimumBet}
+              currentBet={roomData.gameState.blind}
             />
           </div>
           <button

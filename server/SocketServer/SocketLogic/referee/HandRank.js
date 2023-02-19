@@ -34,6 +34,17 @@ function getBestHand(playerCards, communityCards) {
     // Create an object to store the count of each card value
     const count = {};
     for (let j = 0; j < combination.length; j++) {
+      if (combination[j].value === "A") {
+        combination[j].value = 14;
+      } else if (combination[j].value === "K") {
+        combination[j].value = 13;
+      } else if (combination[j].value === "Q") {
+        combination[j].value = 12;
+      } else if (combination[j].value === "J") {
+        combination[j].value = 11;
+      } else {
+        combination[j].value = parseInt(combination[j].value);
+      }
       if (count[combination[j].value]) {
         count[combination[j].value]++;
       } else {
@@ -51,6 +62,7 @@ function getBestHand(playerCards, communityCards) {
     values.sort((a, b) => b - a);
 
     // Check for a royal flush
+    combination.sort((a, b) => a.value - b.value);
     let royalFlush = true;
     for (let j = 0; j < combination.length; j++) {
       if (
@@ -70,7 +82,7 @@ function getBestHand(playerCards, communityCards) {
     let straightFlush = true;
     for (let j = 0; j < combination.length - 1; j++) {
       if (
-        combination[j].value - 1 !== combination[j + 1].value ||
+        combination[j].value + 1 !== combination[j + 1].value ||
         combination[j].suit !== combination[j + 1].suit
       ) {
         straightFlush = false;
@@ -254,3 +266,5 @@ function compareHands(hand1, hand2) {
     }
   }
 }
+
+module.exports = { compareHands, getBestHand };

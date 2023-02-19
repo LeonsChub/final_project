@@ -11,6 +11,8 @@ const {
   deleteRoom,
   getRoomHost,
 } = require("../../roomManager/rooms");
+
+const { compareHands, getBestHand } = require('./HandRank')
 const Player = require("./player/player");
 const pokerRef = (socket, io, roomId) => {
   function updatePlayerHand(to, hand) {
@@ -93,6 +95,30 @@ const pokerRef = (socket, io, roomId) => {
       case "river":
         gameState.gameStage = "showdown";
         gameState.roundInfo.activePlayer = "";
+        const bestHands = []
+        gameState.players.forEach(player => {
+          bestHands.push({ id: player.id, hand: getBestHand(player.cards, gameState.community) })
+        })
+
+        let winningHand = bestHands[0].hand
+
+        bestHands.forEach((playerHand, index) => {
+          if (index !== 0) {
+            console.log('player hand', playerHand.hand)
+            winningHand = compareHands(playerHand.hand, winningHand)
+          }
+        })
+        console.log('winner winner', winningHand)
+        bestHands.forEach((playerHand) => {
+          let same = true;
+          winningHand.cards.forEach((card, index) => {
+            if (playerHand.hand.cards[index].suit !== card.suit || playerHand.hand.cards[index].value !== card.value)
+              same = false
+          })
+          if (same) {
+            newGame(playerHand.id)
+          }
+        })
         break;
 
       default:
@@ -193,7 +219,7 @@ const pokerRef = (socket, io, roomId) => {
     });
     socket.on("bet placed", (data) => {
       const decoded = authToken(data.auth);
-      console.log(socket.id, 'folded')
+
       if (decoded) {
         const playerIndex = gameState.players.findIndex(
           (p) => p.id === decoded.user_id
@@ -221,11 +247,24 @@ const pokerRef = (socket, io, roomId) => {
               gameState.minimumBet = amount;
               addToPot(gameState.players[playerIndex].raise(amount));
               gameState.playerBets[decoded.user_id] = "raise";
+
+              Object.entries(gameState.playerBets).forEach((bet) => {
+                if (bet[1] === 'raise') {
+                  gameState.playerBets[bet[0]] = "check"
+                }
+                if (bet[1] === 'fold') {
+                  gameState.playerBets[bet[0]] = "fold"
+                }
+                if (bet[1] === 'check') {
+                  gameState.playerBets[bet[0]] = ""
+                }
+              }
+              );
             }
           default:
             break;
         }
-
+        console.log(gameState.playerBets)
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
