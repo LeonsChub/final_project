@@ -68,6 +68,9 @@ class Player {
     this.stake = 0;
     this.stakeGap = 0;
   }
+  addChips(chips) {
+    this.chips += chips;
+  }
 }
 
 module.exports = Player;

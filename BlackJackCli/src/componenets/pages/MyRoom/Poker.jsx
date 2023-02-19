@@ -82,6 +82,10 @@ const Poker = () => {
 
     return () => {
       if (mountRef.current) {
+        socket.emit("bet placed", {
+          auth: token,
+          bet: { type: "fold" },
+        });
         socket.emit("leave room", {
           roomId: roomData.sockData.roomId,
           auth: token,
@@ -134,7 +138,7 @@ const Poker = () => {
               value={raiseBet}
               setValue={setRaiseBet}
               myChips={getPlayerChips(user_id)}
-              currentBet={roomData.gameState.roundInfo.minBet}
+              currentBet={roomData.gameState.minimumBet}
             />
           </div>
           <button
@@ -164,6 +168,10 @@ const Poker = () => {
       <div className="leftSide">
         <button
           onClick={() => {
+            socket.emit("bet placed", {
+              auth: token,
+              bet: { type: "fold" },
+            });
             navigate("/");
             socket.emit("leave room");
             setRoomData((prev) => {
@@ -410,6 +418,10 @@ const Poker = () => {
     });
 
     socket.on("kick user", () => {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "fold" },
+      });
       socket.emit("leave room", {
         auth: token,
         roomId: getRoomById(),
@@ -428,6 +440,10 @@ const Poker = () => {
     });
 
     window.addEventListener("unload", function (e) {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "fold" },
+      });
       socket.emit("leave room", {
         roomId: roomData.sockData.roomId,
         auth: token,
