@@ -33,7 +33,10 @@ const pokerRef = (socket, io, roomId) => {
     if (gameState.players.length === 2) {
       return gameState.players[sbIndex]["id"];
     } else {
-      return gameState.players[bbIndex + 1]["id"];
+      if (gameState.players[bbIndex + 1]) {
+        return gameState.players[bbIndex + 1]["id"];
+      }
+      return gameState.players[0]["id"];
     }
   }
 
@@ -97,7 +100,9 @@ const pokerRef = (socket, io, roomId) => {
         gameState.roundInfo.activePlayer = "";
         const bestHands = []
         gameState.players.forEach(player => {
-          bestHands.push({ id: player.id, hand: getBestHand(player.cards, gameState.community) })
+          if (!player.fold) {
+            bestHands.push({ id: player.id, hand: getBestHand(player.cards, gameState.community) })
+          }
         })
 
         let winningHand = bestHands[0].hand
@@ -108,12 +113,12 @@ const pokerRef = (socket, io, roomId) => {
             winningHand = compareHands(playerHand.hand, winningHand)
           }
         })
-        console.log('winner winner', winningHand)
         bestHands.forEach((playerHand) => {
-          let same = true;
-          winningHand.cards.forEach((card, index) => {
-            if (playerHand.hand.cards[index].suit !== card.suit || playerHand.hand.cards[index].value !== card.value)
-              same = false
+          let same = true
+          playerHand.hand.cards.forEach((card, index) => {
+            if (card.suit !== winningHand.cards[index].suit || card.value !== winningHand.cards[index].value) {
+              same = false;
+            }
           })
           if (same) {
             newGame(playerHand.id)
@@ -170,15 +175,16 @@ const pokerRef = (socket, io, roomId) => {
       player.resetStake()
     })
     const { bbIndex, sbIndex } = gameState.roundInfo
-    const nextBb = bbIndex + 1 > gameState.players.length ? 0 : bbIndex + 1
-    const nextSb = sbIndex + 1 > gameState.players.length ? 0 : sbIndex + 1
+    const nextBb = bbIndex + 1 >= gameState.players.length ? 0 : bbIndex + 1
+    const nextSb = sbIndex + 1 >= gameState.players.length ? 0 : sbIndex + 1
 
+    const prevBlind = gameState.blind
     gameState.burned = []
     gameState.community = []
     gameState.deck = shuffleDeck(initDeck())
-    gameState.blind = gameState.blind * 2;
+    gameState.blind = prevBlind * 2;
     gameState.gameStage = "";
-    gameState.minimumBet = gameState.blind * 2
+    gameState.minimumBet = gameState.blind
     gameState.playerBets = {}
     gameState.roundInfo = {
       activePlayer: "",
@@ -198,11 +204,9 @@ const pokerRef = (socket, io, roomId) => {
 
           updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
         });
+        gameState.minimumBet = gameState.blind;
 
         const { sbIndex, bbIndex } = gameState.roundInfo;
-
-        console.log("small", sbIndex, "big", bbIndex)
-
         addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
         addToPot(gameState.players[bbIndex].setBigBlind(gameState.blind)); // get small blind entry and add it to pot in game state
 
@@ -213,6 +217,7 @@ const pokerRef = (socket, io, roomId) => {
         gameState.players.forEach((p) => (gameState.playerBets[p.id] = ""));
         gameState.roundInfo.activePlayer = determineFirst();
         gameState.roundInfo.nextPlayer = determineNext();
+        gameState.gameStage = "preflop";
 
         io.to(roomId).emit("handing cards", gameState); // update
       }
@@ -264,12 +269,12 @@ const pokerRef = (socket, io, roomId) => {
           default:
             break;
         }
-        console.log(gameState.playerBets)
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
 
         if (checkNextRound(gameState.playerBets)) {
+          console.log('advance')
           advanceRound();
         } else {
           gameState.roundInfo.activePlayer = determineNext();
@@ -283,10 +288,10 @@ const pokerRef = (socket, io, roomId) => {
             activeId = gameState.roundInfo.activePlayer;
           }
         }
+        console.log(gameState.blind)
         io.to(roomId).emit("update gamestate", gameState);
       }
     });
-
     socket.on("get winner", () => {
       console.log("NEED TO CALCULATE WINNER");
     });

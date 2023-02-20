@@ -106,8 +106,8 @@ const Poker = () => {
   }, []);
 
   useEffect(() => {
-    if (roomData.gameState.gameStage === "showdown") {
-      // alert("wow u all won cause we didnt calculate the winner function");
+    if (roomData.gameState.gameStage === "") {
+      setGameStarted(false)
     }
   }, [roomData]);
 
@@ -124,10 +124,21 @@ const Poker = () => {
     setGameStarted(true);
     handCardsAnimation();
 
-    socket.emit("start game", {
-      auth: token,
-      roomId: roomData.sockData.roomId,
-    });
+    if (roomData.gameState.blind === 0) {
+      socket.emit("start game", {
+        auth: token,
+        roomId: roomData.sockData.roomId,
+      });
+    } else {
+      socket.emit("continue", {
+        auth: token,
+        roomId: roomData.sockData.roomId,
+      });
+    }
+
+
+
+
   };
   return (
     <div className="pokerSpace">
