@@ -9,6 +9,7 @@ const {
   rmUserFromRoom,
   deleteRoom,
   getRoomHost,
+  isRoomEmpty,
 } = require("../roomManager/rooms");
 
 const jwt = require("jsonwebtoken");
@@ -68,10 +69,10 @@ function socketListenCreateRoom(socket, io) {
           io.to(socket.id).emit("create failed", { msg: "room name taken" });
         }
       } else {
-        console.log("INVALID DATA PROVIDED");
+        // console.log("INVALID DATA PROVIDED");
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      // console.log("NO DATA PROVIDED");
     }
   });
 }
@@ -100,7 +101,7 @@ function socketListenJoinRoom(socket, io) {
         }
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      // console.log("NO DATA PROVIDED");
     }
   });
 }
@@ -114,6 +115,11 @@ function socketListenLeaveRoom(socket, io) {
         rmUserFromRoom(data.roomId, decoded.user_id);
 
         socket.to(data.roomId).emit("user left", getRoomById(data.roomId));
+        if (isRoomEmpty(data.roomId)) {
+          const refIndex = allRefs.findIndex(ref => ref.roomId === data.roomId)
+          allRefs.splice(refIndex, 1)
+          deleteRoom(data.roomId)
+        }
         io.emit("update rooms", { rooms: getAllRooms() });
 
         io.to(socket.id).emit("leave success", {
@@ -123,7 +129,7 @@ function socketListenLeaveRoom(socket, io) {
         console.log("leaving");
       }
     } else {
-      console.log("NO DATA PROVIDED");
+      console.log("NO DATA PROVIDED on leaving room");
     }
   });
 }

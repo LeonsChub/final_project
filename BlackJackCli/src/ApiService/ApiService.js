@@ -62,6 +62,7 @@ class ApiService {
     ).data;
     return results;
   }
+
   async getDailyGame() {
     const token = getToken();
     const { user_id } = decode(token);

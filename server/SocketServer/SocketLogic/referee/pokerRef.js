@@ -11,6 +11,8 @@ const {
   deleteRoom,
   getRoomHost,
 } = require("../../roomManager/rooms");
+const { compareHands, getBestHand } = require('./HandRank')
+
 const Player = require("./player/player");
 const pokerRef = (socket, io, roomId) => {
   function updatePlayerHand(to, hand) {
@@ -31,7 +33,12 @@ const pokerRef = (socket, io, roomId) => {
     if (gameState.players.length === 2) {
       return gameState.players[sbIndex]["id"];
     } else {
-      return gameState.players[bbIndex + 1]["id"];
+
+      if (gameState.players[bbIndex + 1]) {
+        return gameState.players[bbIndex + 1]["id"];
+      }
+      return gameState.players[0]["id"];
+
     }
   }
 
@@ -40,7 +47,12 @@ const pokerRef = (socket, io, roomId) => {
     let playerFolded = gameState.players[index].fold;
     while (playerFolded) {
       index = index + 1;
-      playerFolded = gameState.players[index].fold;
+      if (gameState.players[index]) {
+
+        playerFolded = gameState.players[index].fold;
+      } else {
+        index = -1
+      }
     }
 
     return gameState.players[index]["id"];
@@ -88,6 +100,32 @@ const pokerRef = (socket, io, roomId) => {
       case "river":
         gameState.gameStage = "showdown";
         gameState.roundInfo.activePlayer = "";
+        const bestHands = []
+        gameState.players.forEach(player => {
+          if (!player.fold) {
+            bestHands.push({ id: player.id, hand: getBestHand(player.cards, gameState.community) })
+          }
+        })
+
+        let winningHand = bestHands[0].hand
+
+        bestHands.forEach((playerHand, index) => {
+          if (index !== 0) {
+            console.log('player hand', playerHand.hand)
+            winningHand = compareHands(playerHand.hand, winningHand)
+          }
+        })
+        bestHands.forEach((playerHand) => {
+          let same = true
+          playerHand.hand.cards.forEach((card, index) => {
+            if (card.suit !== winningHand.cards[index].suit || card.value !== winningHand.cards[index].value) {
+              same = false;
+            }
+          })
+          if (same) {
+            newGame(playerHand.id)
+          }
+        })
         break;
 
       default:
@@ -106,6 +144,57 @@ const pokerRef = (socket, io, roomId) => {
     );
   }
 
+  function checkDefaultWinner() {
+    let folded = 0;
+    Object.entries(gameState.playerBets).forEach(bet => {
+      if (bet[1] === "fold") {
+        folded = folded + 1;
+      }
+    })
+
+    if (folded + 1 === Object.entries(gameState.playerBets).length) {
+      const winningBet = Object.entries(gameState.playerBets).filter(bet => {
+        return bet[1] !== "fold"
+      })
+
+      return winningBet[0]
+    }
+  }
+
+  function newGame(winnerId) {
+    const winnerIndex = gameState.players.findIndex(player => {
+      return player.id === winnerId
+    })
+
+    gameState.players[winnerIndex].addChips(gameState.pot)
+
+    reloadTable()
+  }
+
+  function reloadTable() {
+    gameState.pot = 0
+    gameState.players.forEach(player => {
+      player.resetStake()
+    })
+    const { bbIndex, sbIndex } = gameState.roundInfo
+    const nextBb = bbIndex + 1 >= gameState.players.length ? 0 : bbIndex + 1
+    const nextSb = sbIndex + 1 >= gameState.players.length ? 0 : sbIndex + 1
+
+    const prevBlind = gameState.blind
+    gameState.burned = []
+    gameState.community = []
+    gameState.deck = shuffleDeck(initDeck())
+    gameState.blind = prevBlind * 2;
+    gameState.gameStage = "";
+    gameState.minimumBet = gameState.blind
+    gameState.playerBets = {}
+    gameState.roundInfo = {
+      activePlayer: "",
+      bbIndex: nextBb,
+      nextPlayer: "",
+      sbIndex: nextSb
+    }
+  }
   function initListeners(socket) {
     socket.on("init round", () => {
       if (!gaveCards) {
@@ -116,7 +205,7 @@ const pokerRef = (socket, io, roomId) => {
 
           updatePlayerHand(player.id, hand); // update players array append hand card to player with id given
         });
-
+        gameState.minimumBet = gameState.blind;
         const { sbIndex, bbIndex } = gameState.roundInfo;
 
         addToPot(gameState.players[sbIndex].setSmallBlind(gameState.blind)); // get small blind entry and add it to pot in game state
@@ -129,6 +218,8 @@ const pokerRef = (socket, io, roomId) => {
         gameState.players.forEach((p) => (gameState.playerBets[p.id] = ""));
         gameState.roundInfo.activePlayer = determineFirst();
         gameState.roundInfo.nextPlayer = determineNext();
+        gameState.gameStage = "preflop";
+
 
         io.to(roomId).emit("handing cards", gameState); // update
       }
@@ -136,7 +227,6 @@ const pokerRef = (socket, io, roomId) => {
     socket.on("bet placed", (data) => {
       const decoded = authToken(data.auth);
       if (decoded) {
-        console.log("a bet has been placed");
         const playerIndex = gameState.players.findIndex(
           (p) => p.id === decoded.user_id
         );
@@ -145,6 +235,10 @@ const pokerRef = (socket, io, roomId) => {
           case "fold":
             gameState.players[playerIndex].setFold();
             gameState.playerBets[decoded.user_id] = "fold";
+            if (checkDefaultWinner()) {
+              const winnerId = checkDefaultWinner()[0]
+              newGame(winnerId)
+            }
             break;
 
           case "call":
@@ -159,11 +253,23 @@ const pokerRef = (socket, io, roomId) => {
               gameState.minimumBet = amount;
               addToPot(gameState.players[playerIndex].raise(amount));
               gameState.playerBets[decoded.user_id] = "raise";
+              Object.entries(gameState.playerBets).forEach((bet) => {
+                if (bet[1] === 'raise') {
+                  gameState.playerBets[bet[0]] = "check"
+                }
+                if (bet[1] === 'fold') {
+                  gameState.playerBets[bet[0]] = "fold"
+                }
+                if (bet[1] === 'check') {
+                  gameState.playerBets[bet[0]] = ""
+                }
+              }
+              );
+
             }
           default:
             break;
         }
-
         gameState.players.forEach((player) => {
           player.updateGap(gameState.minimumBet);
         });
@@ -191,8 +297,9 @@ const pokerRef = (socket, io, roomId) => {
     });
 
     socket.on("leave room", () => {
-      socket.off("bet placed", () => {});
-      socket.off("init round", () => {});
+      sockets = sockets.filter(sock => sock.id !== socket.id)
+      socket.off("bet placed", () => { });
+      socket.off("init round", () => { });
     });
   }
 
@@ -217,11 +324,22 @@ const pokerRef = (socket, io, roomId) => {
 
   let gaveCards = false;
 
-
+  let sockets = [socket];
   initListeners(socket);
 
+  function joinSocket(socket) {
+    const alreadyListening = sockets.filter(sock => {
+      return sock.id === socket.id
+    }).length > 0
 
-  return initListeners;
+    if (!alreadyListening) {
+      sockets.push(socket)
+      initListeners(socket)
+    }
+  }
+
+
+  return joinSocket;
 };
 
 // ------------------------Helper functions------------------------------

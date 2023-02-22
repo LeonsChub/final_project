@@ -11,7 +11,6 @@ function verifyUser(req, res, next) {
 
   try {
     const t = jwt.verify(token, process.env.TOKEN_KEY);
-    console.log(t)
     next();
   } catch (e) {
     // console.log(e)

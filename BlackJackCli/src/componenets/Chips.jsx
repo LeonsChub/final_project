@@ -17,8 +17,6 @@ const Chips = ({ value }) => {
         break;
     }
   }
-  
-  console.log(renderChips(value))
   switch (renderChips(value)) {
     case "white":
       return (

@@ -2,7 +2,12 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import MySlider from "./TableComps/Slider";
 import "./style/poker.css";
 import { useNavigate } from "react-router-dom";
-import { RoomContext, SocketContext, UserContext } from "../../../AppContext";
+import {
+  RoomContext,
+  SocketContext,
+  UserContext,
+} from "../../../AppContext";
+
 import jwt from "jwt-decode";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Card from "./../../Card";
@@ -35,6 +40,10 @@ const Poker = () => {
     initListeners();
     return () => {
       if (mountRef.current) {
+        socket.emit("bet placed", {
+          auth: token,
+          bet: { type: "fold" },
+        });
         socket.emit("leave room", {
           roomId: roomData.sockData.roomId,
           auth: token,
@@ -55,8 +64,9 @@ const Poker = () => {
   }, []);
 
   useEffect(() => {
-    if (roomData.gameState.gameStage === "showdown") {
-      alert("Winner winner chicken dinner!");
+    if (roomData.gameState.gameStage === "") {
+      setGameStarted(false)
+
     }
   }, [roomData]);
 
@@ -73,10 +83,18 @@ const Poker = () => {
     setGameStarted(true);
     handCardsAnimation();
 
-    socket.emit("start game", {
-      auth: token,
-      roomId: roomData.sockData.roomId,
-    });
+    if (roomData.gameState.blind === 0) {
+      socket.emit("start game", {
+        auth: token,
+        roomId: roomData.sockData.roomId,
+      });
+    } else {
+      socket.emit("continue", {
+        auth: token,
+        roomId: roomData.sockData.roomId,
+      });
+    }
+
   };
   return (
     <div className="pokerSpace">
@@ -87,7 +105,8 @@ const Poker = () => {
               value={raiseBet}
               setValue={setRaiseBet}
               myChips={getPlayerChips(user_id)}
-              currentBet={roomData.gameState.roundInfo.minBet}
+              currentBet={roomData.gameState.blind}
+
             />
           </div>
           <button
@@ -118,8 +137,12 @@ const Poker = () => {
         <button
         className="custom-btn btn-15B"
           onClick={() => {
+            console.log('leaving room clicked buttinb')
+            socket.emit("bet placed", {
+              auth: token,
+              bet: { type: "fold" },
+            });
             navigate("/");
-            socket.emit("leave room");
             setRoomData((prev) => {
               const oldState = { ...prev };
               oldState.gameState = blankGameState();
@@ -334,6 +357,7 @@ const Poker = () => {
           </div>
         </div>
       </div>
+
       {/* <h1 style={{ position: "absolute", top: "5%", right: "5%" }}>
         POT :{roomData.gameState.pot}
       </h1>
@@ -371,7 +395,6 @@ const Poker = () => {
   }
   function seats(i) {
     const player = reorderCenter(roomData.sockData.players)[i - 1];
-
     return (
       <span id={`seat${i}`} style={{ color: "white" }}>
         <p>{player ? player.name : ""}</p>
@@ -400,7 +423,6 @@ const Poker = () => {
   }
   function initListeners() {
     socket.on("handing cards", (data) => {
-      console.log("RUN ANIMATION FOR EACH PLAYER");
       setRoomData((prev) => {
         const oldState = { ...prev };
         oldState.gameState = data;
@@ -459,12 +481,15 @@ const Poker = () => {
     });
 
     socket.on("kick user", () => {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "fold" },
+      });
       socket.emit("leave room", {
         auth: token,
         roomId: getRoomById(),
       });
     });
-
     socket.on("ready check", () => {
       socket.emit("ready check ack", { roomId: roomData.sockData.roomId });
     });
@@ -475,6 +500,10 @@ const Poker = () => {
     });
 
     window.addEventListener("unload", function (e) {
+      socket.emit("bet placed", {
+        auth: token,
+        bet: { type: "fold" },
+      });
       socket.emit("leave room", {
         roomId: roomData.sockData.roomId,
         auth: token,
@@ -524,7 +553,6 @@ const Poker = () => {
 
     return reordered;
   }
-
   function sleep(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);

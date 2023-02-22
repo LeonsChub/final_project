@@ -19,7 +19,6 @@ class Player {
   }
   setSmallBlind(blind) {
     // set player as being the small blind
-    this.specialAttrs.push("small blind");
     this.stake = blind / 2;
     this.chips = this.chips - blind / 2;
 
@@ -27,7 +26,6 @@ class Player {
   }
   setBigBlind(blind) {
     // set player as being the small blind
-    this.specialAttrs.push("big blind");
     this.stake = blind;
     this.chips = this.chips - blind;
 
@@ -67,6 +65,9 @@ class Player {
   resetStake() {
     this.stake = 0;
     this.stakeGap = 0;
+  }
+  addChips(chips) {
+    this.chips += chips;
   }
 }
 

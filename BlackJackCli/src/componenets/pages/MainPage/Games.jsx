@@ -55,6 +55,7 @@ const Games = () => {
       }
     }
   };
+
   function sleep(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
@@ -81,6 +82,7 @@ const Games = () => {
     myProfile();
     getChips();
     getDailyGame();
+
   }, []);
 
   return (
@@ -157,6 +159,7 @@ const Games = () => {
               console.log(toReturn);
               return toReturn;
             })}
+
           </div>
         </div>
       ) : (

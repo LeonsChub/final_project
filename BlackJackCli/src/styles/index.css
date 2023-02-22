@@ -125,7 +125,6 @@
     opacity: 1;
   }
 }
-
 .headerItems:hover {
   text-shadow: 4px 4px 4px #a6882d;
 }
@@ -759,11 +758,9 @@
   /* background-color: #7d0e54; */
   /* background-color: rgba(176, 0, 97, 0.858); */
   /* background-color: rgba(44, 176, 0, 0.858); */
-  background-color: #6a6a6a6f;
   color: #ff0000;
   font-size: 200%;
   font-family: "Russo One", sans-serif;
-
 }
 /* === Charts === */
 .chart1 {
@@ -829,6 +826,7 @@
   text-align: center;
   color: #a89d4d;
   font-family: "Russo One", sans-serif;
+
 }
 /* === Special buttons === */
 .btnSpecial {

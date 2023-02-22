@@ -19,6 +19,7 @@ const Profile = () => {
           <div className="chart1">
             <PieChart />
           </div>
+
         </div>
         <div className="stat">
           <p>Available Soon</p>
