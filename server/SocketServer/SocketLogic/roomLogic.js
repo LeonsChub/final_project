@@ -9,6 +9,7 @@ const {
   rmUserFromRoom,
   deleteRoom,
   getRoomHost,
+  isRoomEmpty,
 } = require("../roomManager/rooms");
 
 const jwt = require("jsonwebtoken");
@@ -114,6 +115,11 @@ function socketListenLeaveRoom(socket, io) {
         rmUserFromRoom(data.roomId, decoded.user_id);
 
         socket.to(data.roomId).emit("user left", getRoomById(data.roomId));
+        if (isRoomEmpty(data.roomId)) {
+          const refIndex = allRefs.findIndex(ref => ref.roomId === data.roomId)
+          allRefs.splice(refIndex, 1)
+          deleteRoom(data.roomId)
+        }
         io.emit("update rooms", { rooms: getAllRooms() });
 
         io.to(socket.id).emit("leave success", {

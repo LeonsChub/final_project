@@ -19,6 +19,8 @@ const createRoom = (hostData, roomName, private = false) => {
 
 const addRoom = (room) => {
   rooms.push(room);
+  console.log('after', rooms)
+
 };
 
 const addUserToRoom = (roomId, hostData) => {
@@ -77,6 +79,16 @@ const deleteRoom = (roomId) => {
   }
 };
 
+const isRoomEmpty = (roomId) => {
+  const roomIndex = rooms.findIndex((room) => room.roomId == roomId);
+  if (roomIndex !== -1) {
+
+    return isEmpty = rooms[roomIndex].players.length === 0;
+  }
+  return false
+
+}
+
 const getRoomHost = (roomId) => {
   if (rooms.length > 0) {
     const index = rooms.findIndex((room) => {
@@ -97,4 +109,5 @@ module.exports = {
   rmUserFromRoom,
   deleteRoom,
   getRoomHost,
+  isRoomEmpty
 };
