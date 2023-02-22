@@ -11,8 +11,8 @@ class ApiService {
     axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        localStorage.removeItem('token')
-        location.reload()
+        localStorage.removeItem("token");
+        location.reload();
       }
     );
   }
@@ -59,6 +59,25 @@ class ApiService {
           },
         }
       )
+    ).data;
+    return results;
+  }
+
+  async getDailyGame() {
+    const token = getToken();
+    const { user_id } = decode(token);
+    const results = (
+      await axios.get(`http://localhost:3000/users/dailygame/${user_id}`)
+    ).data;
+    return results;
+  }
+  async postDailyGame(num) {
+    const token = getToken();
+    const { user_id } = decode(token);
+    const results = (
+      await axios.post(`http://localhost:3000/users/dailygame/${user_id}`, {
+        daily_game: num,
+      })
     ).data;
     return results;
   }

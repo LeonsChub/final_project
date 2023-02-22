@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
-// import { axios } from "axios";
-import axios from "axios";
 import { UserContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import { apiService } from "./../../ApiService/ApiService";
+import Alert from "@mui/material/Alert";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,12 +20,12 @@ const Login = () => {
       await apiService
         .login(email, password)
         .then((res) => {
-          localStorage.setItem('token',res.data)
-          myProfile()
+          localStorage.setItem("token", res.data);
+          myProfile();
           navigate("/");
         })
         .catch((err) => {
-          setError(err.response.data);
+          () => alert(err.response.data);
         });
     }
   }

@@ -8,6 +8,7 @@ class Player {
     this.cards = [];
     this.score = [];
     this.fold = false;
+    this.specialAttrs = [];
     this.win = false;
   }
 
